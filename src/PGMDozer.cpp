@@ -44,6 +44,28 @@ void get_image(char* image_route, unsigned int ancho, unsigned int alto, RowVect
     source.close();
 }
 
+void show_help(){
+   
+  std::string caras_art = "     ___          ___          ___          ___          ___     \n";
+  caras_art += "    /  /\\        /  /\\        /  /\\        /  /\\        /  /\\    \n";
+  caras_art += "   /  /:/       /  /::\\      /  /::\\      /  /::\\      /  /:/_   \n";
+  caras_art += "  /  /:/       /  /:/\\:\\    /  /:/\\:\\    /  /:/\\:\\    /  /:/ /\\  \n";
+  caras_art += " /  /:/  ___  /  /:/~/::\\  /  /:/~/:/   /  /:/~/::\\  /  /:/ /::\\ \n";
+  caras_art += "/__/:/  /  /\\/__/:/ /:/\\:\\/__/:/ /:/___/__/:/ /:/\\:\\/__/:/ /:/\\:\\ \n";
+  caras_art += "\\  \\:\\ /  /:/\\  \\:\\/:/__\\/\\  \\:\\/:::::/\\  \\:\\/:/__\\/\\  \\:\\/:/~/:/\n";
+  caras_art += " \\  \\:\\  /:/  \\  \\::/      \\  \\::/~~~~  \\  \\::/      \\  \\::/ /:/ \n";
+  caras_art += "  \\  \\:\\/:/    \\  \\:\\       \\  \\:\\       \\  \\:\\       \\__\\/ /:/  \n";
+  caras_art += "   \\  \\::/      \\  \\:\\       \\  \\:\\       \\  \\:\\        /__/:/   \n";
+  caras_art += "    \\__\\/        \\__\\/        \\__\\/        \\__\\/        \\__\\/    \n\n";
+  std::string message = "Uso de este super reconocedor de caras (no la revista):\n";
+  message += "\n";
+  message += "./tp [ruta al archivo de config]\n";
+  message += "\n";
+  message += "Salu2\n";
+  std::cout << termcolor::red << caras_art << termcolor::reset ;
+  std::cout << termcolor::bold << termcolor::red << "\t\t\tRECOGNIZER\n\n" << termcolor:: reset << std::endl;
+  std::cout << termcolor::blue << message << std::endl;
+}
 
 // TESING
 /*

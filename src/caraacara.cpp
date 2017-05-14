@@ -1,7 +1,14 @@
 #include "PGMDozer.hpp"
 #include "parser.hpp"
+#include <iostream>
+
 
 int main(int argc, char const *argv[]) {
+    
+    if (argc != 2) {
+      show_help();
+      return 0;
+    }
 
     char const* in_path;
     char const* out_path;

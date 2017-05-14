@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "include/Eigen/Core"
+#include "include/termcolor.hpp"
 
 using namespace Eigen;
 
@@ -11,3 +12,4 @@ using namespace Eigen;
 // typedef Matrix< float , 1, Dynamic > Eigen::RowVectorXf
 // typedef Matrix< double , 1, Dynamic > Eigen::RowVectorXd
 void get_image(char* image_route, unsigned int ancho, unsigned int alto, RowVectorXf& imagen);
+void show_help();
