@@ -6,7 +6,7 @@ using namespace Eigen;
 
 // MAtrixxXi <- matrix de tamaño random, con eltos integer
 
-void get_image(char* image_route, unsigned int ancho, unsigned int alto, RowVectorXf& imagen){
+void get_image(const char* image_route, unsigned int ancho, unsigned int alto, RowVectorXf& imagen){
     //Abro el archivo de la imagen
     std::ifstream source(image_route, std::fstream::in);
     if (!source) {
