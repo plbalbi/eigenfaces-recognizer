@@ -46,8 +46,8 @@ void get_image(char* image_route, unsigned int ancho, unsigned int alto, RowVect
 
 
 // TESING
-int main(int argc, char *argv[])
-{
+/*
+int main(int argc, char *argv[]){
     if (argc != 2) {
         std::cerr << "ERROR: Faltaron/sobraron argumentos" << std::endl;
     }
@@ -56,3 +56,4 @@ int main(int argc, char *argv[])
     get_image(file, 92, 112, imagen);
     return 0;
 }
+*/

@@ -46,31 +46,3 @@ void read_input(const char* input_path, unsigned int &img_ancho, unsigned int &i
 
     input.close();
 }
-
-
-int main_test(int argc, char const *argv[]) {
-    unsigned int img_ancho;
-    unsigned int img_alto;
-    unsigned int k;
-
-    vector<sujeto> sujetos;
-    vector<test> tests;
-    read_input(argv[1], img_ancho, img_alto, k, sujetos, tests);
-
-    std::cout << "Ancho imágenes: " << img_ancho << '\n';
-    std::cout << "Alto imágenes: " << img_alto << '\n';
-    std::cout << "# Componentes principales: " << k << '\n';
-
-    for (size_t i = 0; i < sujetos.size(); i++) {
-        std::cout << "Imágenes sujeto " << i << '\n';
-        for (size_t j = 0; j < sujetos[i].size(); j++) {
-            std::cout << sujetos[i][j] << '\n';
-        }
-    }
-
-    std::cout << "Tests:" << '\n';
-    for (size_t i = 0; i < tests.size(); i++) {
-        std::cout << tests[i].path << " " << tests[i].respuesta << '\n';
-    }
-    return 0;
-}
