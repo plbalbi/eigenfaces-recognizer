@@ -1,4 +1,8 @@
+# Directorios
 data/
+informe/
+
+# Filetypes
 *.swp
 *.pyc
 *.gch
