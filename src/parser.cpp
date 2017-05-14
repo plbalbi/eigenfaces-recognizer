@@ -44,6 +44,7 @@ void read_input(const char* input_path, unsigned int &img_ancho, unsigned int &i
         tests.push_back(un_test);
     }
 
+    input.close();
 }
 
 
