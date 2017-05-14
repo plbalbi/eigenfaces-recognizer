@@ -22,7 +22,6 @@ void get_image(char* image_route, unsigned int ancho, unsigned int alto, RowVect
   // parseando pixels
   imagen.resize(1, ancho*alto);
   unsigned char pixel;
-  unsigned int i(0);
   for (size_t i = 0; i < ancho*alto; i++) {
       source >> pixel;
       imagen(i) = pixel;
