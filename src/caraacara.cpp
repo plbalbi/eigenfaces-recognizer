@@ -3,12 +3,14 @@
 // -------------- separador de bajo presupuesto --------------
 // Reduccion de espacio
 int metodoPotencia(const MatrixXf& B, RowVectorXf& v, int iteraciones){
+  VectorXf vt = v.transpose();
   for (int i = 0; i < iteraciones; i++) {
-    v = B*v.transpose();
-    v *= (1/norma2(v));
+    v = B*vt;
+    v *= (1/v.norm());
+    vt = v.transpose();
   }
-  int lambda = v*(B*v.transpose());
-  lambda /= (v*v.transpose());
+  int lambda = v*(B*vt);
+  lambda /= (v*vt);
   return lambda;
 }
 
@@ -85,9 +87,8 @@ int main(int argc, char const *argv[]) {
     M_x *= 1/((double)(sujetos.size()*img_por_sujeto -1));
 
     // testeando metodo potencia
-    RowVectorXf test_vector = RowVectorXf(sujetos.size()*img_por_sujeto);
-    test_vector = RowVectorXf::Random();
-    std::cout << "hola"  << std::endl;
+    RowVectorXf test_vector = RowVectorXf(img_alto*img_ancho);
+    test_vector = M_x.row(1); // uno random cualquiera
     int test_eigenValue = metodoPotencia(M_x, test_vector, 10);
 
     std::cout << "Prueba metodo potencia: " << std::endl;
