@@ -1,4 +1,4 @@
-../data/ImagenesCaras/ 112 92 12 5 10
+../data/ImagenesCaras/ 112 92 12 5 5
 s1/ 4 6 1 2 3
 s2/ 4 6 1 2 3
 s3/ 4 6 1 2 3

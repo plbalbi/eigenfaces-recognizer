@@ -149,6 +149,19 @@ int main(int argc, char const *argv[]) {
     transfCaracteristica(M_x,k,100,Vt);
     std::cout << "Armando TL al espacio copado..." << termcolor::green << "OK" << termcolor::reset << std::endl;
 
+    // imprimo en sujeto las fotitos de los autovectores
+    char* base_dir = "sujetos/";
+    for (int i = 0; i < k; i++) {
+      std::string save_route = base_dir;
+      save_route += "autovector";
+      save_route += "_";
+      save_route += std::to_string(i+1);
+      save_route += ".pgm";
+      RowVectorXf sujeto_en_espacio = (Vt.row(i))*((double)(sujetos.size()*img_por_sujeto -1))+media;
+      save_image(save_route.c_str(), 92, 112, sujeto_en_espacio);
+    }
+
+
     std::cout << "Pasando imagenes a nuevo espacio" << std::flush;
     
     // Testeando: así queda cada imagen de entrenamiento en el nuevo espacio
