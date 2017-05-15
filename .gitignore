@@ -3,6 +3,7 @@ data/
 informe/
 
 # Filetypes
+.gdb*
 *.swp
 *.pyc
 *.gch

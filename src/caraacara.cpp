@@ -72,5 +72,15 @@ int main(int argc, char const *argv[]) {
     M_x = Xt*X;
     M_x *= 1/((double)(sujetos.size()*img_por_sujeto -1));
 
+    // testeando metodo potencia
+    RowVectorXf test_vector = RowVectorXf(sujetos.size()*img_por_sujeto);
+    test_vector = RowVectorXf::Random();
+    std::cout << "hola"  << std::endl;
+    int test_eigenValue = metodoPotencia(M_x, test_vector, 10);
+
+    std::cout << "Prueba metodo potencia: " << std::endl;
+    std::cout << test_vector << std::endl;
+    std::cout << test_eigenValue << std::endl;
+
     return 0;
 }
