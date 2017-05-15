@@ -40,7 +40,7 @@ int kNN();
 int main(int argc, char const *argv[]) {
 
     // Mostrar help si no hay 1 parametro
-    if (argc != 2) {
+    if (argc != 3) {
       show_help();
       return 0;
     }
