@@ -13,6 +13,7 @@
 // Reduccion de espacio
 int metodoPotencia(MatrixXf& B, RowVectorXf& v, int iteraciones);
 void deflacionar(MatrixXf& B, RowVectorXf& v, int lambda);
+void transfCaracteristica(MatrixXf& M_x, MatrixXf& Vt);
 
 // -------------- separador de bajo presupuesto --------------
 // Clasificacion
