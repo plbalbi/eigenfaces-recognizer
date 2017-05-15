@@ -22,7 +22,9 @@ void get_image(const char* image_route, unsigned int ancho, unsigned int alto, R
     //La imagen ya fue abierta aca
     string filetype, comment, size, maxvalue;
     getline(source, filetype); // numero mágico: formato de archivo
-    getline(source, comment); // commentario
+    if (source.peek()=='#') {
+      getline(source, comment); // commentario
+    }
     getline(source, size); // ancho alto
     getline(source, maxvalue); // maxValue
 
