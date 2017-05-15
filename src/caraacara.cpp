@@ -15,15 +15,16 @@ int metodoPotencia(const MatrixXf& B, RowVectorXf& v, int iteraciones){
 }
 
 void deflacionar(MatrixXf& B, RowVectorXf& v, int lambda){
-  B = B - lambda*v.transpose()*v;
+  VectorXf vt = v.transpose();
+  B = B - lambda*vt*v;
 }
 
 void transfCaracteristica(MatrixXf& M_x, unsigned int k, MatrixXf& Vt){
     Vt.resize(k, M_x.rows());
 
-    int iteraciones = 10;
+    int iteraciones = 100;
     for (size_t i = 0; i < k; i++) {
-        RowVectorXf v;
+        RowVectorXf v = M_x.row(0); // un vector cualquiera
         int lambda = metodoPotencia(M_x,v,iteraciones);
         deflacionar(M_x,v,lambda);
         Vt.row(i) = v;
@@ -86,7 +87,10 @@ int main(int argc, char const *argv[]) {
     M_x = Xt*X;
     M_x *= 1/((double)(sujetos.size()*img_por_sujeto -1));
 
+
+
     // testeando metodo potencia
+    /*
     RowVectorXf test_vector = RowVectorXf(img_alto*img_ancho);
     test_vector = M_x.row(1); // uno random cualquiera
     int test_eigenValue = metodoPotencia(M_x, test_vector, 10);
@@ -94,6 +98,14 @@ int main(int argc, char const *argv[]) {
     std::cout << "Prueba metodo potencia: " << std::endl;
     std::cout << test_vector << std::endl;
     std::cout << test_eigenValue << std::endl;
+    */
+
+
+    MatrixXf Vt;
+
+    transfCaracteristica(M_x,2,Vt);
+    std::cout << Vt << '\n';
+
 
     return 0;
 }
