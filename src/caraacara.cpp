@@ -110,12 +110,12 @@ int main(int argc, char const *argv[]) {
     in_path = argv[1];
     out_path = argv[2];
 
-    std::cout << "Leyendo entrada de datos..." << std::flush;
+    std::cout << "Leyendo entrada de datos...\r" << std::flush;
     read_input(in_path, img_ancho, img_alto, k, sujetos, tests);
-    std::cout << "Leyendo entrada de datos...  " << termcolor::green << "OK" << termcolor::reset << std::endl;
+    std::cout << "Leyendo entrada de datos..." << termcolor::green << "   OK" << termcolor::reset << std::endl;
     if (sujetos.size()>0) img_por_sujeto = sujetos[0].size();
     // Pongo las imágenes como filas de 'X', calculando la media al mismo tiempo
-    std::cout << "Armando matriz de covarianza" << std::flush;
+    std::cout << "Armando matriz de covarianza...\r" << std::flush;
     MatrixXf X(img_por_sujeto*sujetos.size(), img_alto*img_ancho);
     RowVectorXf media(1, img_alto*img_ancho);
     media.setZero();
@@ -140,14 +140,14 @@ int main(int argc, char const *argv[]) {
     MatrixXf Xt = X.transpose();
     M_x = Xt*X;
     M_x *= 1/((double)(sujetos.size()*img_por_sujeto -1));
-    std::cout << "Armando matriz de covarianza..." << termcolor::green << "OK" << termcolor::reset << std::endl;
+    std::cout << "Armando matriz de covarianza..." << termcolor::green << "   OK" << termcolor::reset << std::endl;
 
 
     // Busco la transformación característica
-    std::cout << "Armando TL al espacio copado" << std::flush;
+    std::cout << "Armando TL al espacio copado...\r" << std::flush;
     MatrixXf Vt;
     transfCaracteristica(M_x,k,100,Vt);
-    std::cout << "Armando TL al espacio copado..." << termcolor::green << "OK" << termcolor::reset << std::endl;
+    std::cout << "Armando TL al espacio copado..." << termcolor::green << "   OK" << termcolor::reset << std::endl;
 
     // imprimo en sujeto las fotitos de los autovectores
     char* base_dir = "sujetos/";
@@ -162,20 +162,41 @@ int main(int argc, char const *argv[]) {
     }
 
 
-    std::cout << "Pasando imagenes a nuevo espacio" << std::flush;
+    std::cout << "Pasando imagenes a nuevo espacio...\r" << std::flush;
+
+    // Vector que contiene cada cara de cada sujetos en un vector, ya convertida al nuevo espacio
+
+    std::vector< std::vector<VectorXf> > clase_de_sujetos(sujetos.size());
+    MatrixXf PXt = MatrixXf(k, sujetos.size()*img_por_sujeto);
+    PXt = Vt * Xt;
+
+    for (int i = 0; i < sujetos.size(); i++){
+      clase_de_sujetos[i] = std::vector<VectorXf>(img_por_sujeto);
+      for (int j = 0; j < img_por_sujeto; j++){
+        clase_de_sujetos[i][j] = PXt.col(i*img_por_sujeto+j);
+      }
+    }
     
     // Testeando: así queda cada imagen de entrenamiento en el nuevo espacio
-    for (size_t s = 0; s < sujetos.size(); s++) {
-        std::cout << "Base del sujeto " << s <<":" << '\n';
-        for (size_t i = 0; i < img_por_sujeto; i++) {
-            VectorXf x_i(img_alto*img_ancho);
-            for (size_t j = 0; j < img_alto*img_ancho; j++) {
-                x_i(j) = X(s*sujetos[s].size()+i,j);
-            }
-            std::cout << Vt*x_i << '\n' << '\n';
-        }
+    //for (size_t s = 0; s < sujetos.size(); s++) {
+        //std::cout << "Base del sujeto " << s <<":" << '\n';
+        //for (size_t i = 0; i < img_por_sujeto; i++) {
+            //VectorXf x_i(img_alto*img_ancho);
+            //for (size_t j = 0; j < img_alto*img_ancho; j++) {
+                //x_i = X.col(s*sujetos[s].size()+i);
+            //}
+            //std::cout << Vt.transpose()*x_i << '\n' << '\n';
+        //}
+    //}
+    //
+    for (int i = 0; i < sujetos.size(); i++) {
+      for (int j = 0; j < img_por_sujeto; j++) {
+        std::cout << "Sujeto " << i << " | imagen " << j << ":" << std::endl;
+        std::cout << clase_de_sujetos[i][j] << std::endl;
+      }
     }
-    std::cout << "Pasando imagenes a nuevo espacio..." << termcolor::green << "OK" << termcolor::reset << std::endl;
+    
+    std::cout << "Pasando imagenes a nuevo espacio..." << termcolor::green << "   OK" << termcolor::reset << std::endl;
 
 
     // testeando metodo potencia
