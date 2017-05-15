@@ -2,12 +2,18 @@
 
 // -------------- separador de bajo presupuesto --------------
 // Reduccion de espacio
-int metodoPotencia(MatrixXf& B, RowVectorXf& v, int iteraciones);
-void deflacionar(MatrixXf& B, RowVectorXf& v, int lambda);
-int norma2(const RowVectorXf& v){
-  RowVectorXf v_copy = v;
-  return sqrt(v.dot(v));
+int metodoPotencia(const MatrixXf& B, RowVectorXf& v, int iteraciones){
+  for (int i = 0; i < iteraciones; i++) {
+    v = B*v.transpose();
+    v *= (1/norma2(v));
+  }
+  int lambda = v*(B*v.transpose());
+  lambda /= (v*v.transpose());
+  return lambda;
+}
 
+void deflacionar(MatrixXf& B, RowVectorXf& v, int lambda){
+  B = B - lambda*v.transpose()*v;
 }
 
 // -------------- separador de bajo presupuesto --------------
