@@ -16,6 +16,18 @@ void deflacionar(MatrixXf& B, RowVectorXf& v, int lambda){
   B = B - lambda*v.transpose()*v;
 }
 
+void transfCaracteristica(MatrixXf& M_x, unsigned int k, MatrixXf& Vt){
+    Vt.resize(k, M_x.rows());
+
+    int iteraciones = 10;
+    for (size_t i = 0; i < k; i++) {
+        RowVectorXf v;
+        int lambda = metodoPotencia(M_x,v,iteraciones);
+        deflacionar(M_x,v,lambda);
+        Vt.row(i) = v;
+    }
+}
+
 // -------------- separador de bajo presupuesto --------------
 // Clasificacion
 int kNN();
