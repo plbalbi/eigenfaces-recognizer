@@ -61,7 +61,7 @@ void show_help(){
   caras_art += "    \\__\\/        \\__\\/        \\__\\/        \\__\\/        \\__\\/    \n\n";
   std::string message = "Uso de este super reconocedor de caras (no la revista):\n";
   message += "\n";
-  message += "./tp [ruta al archivo de config]\n";
+  message += "./tp [ruta al archivo de config] [archivo de salida]\n";
   message += "\n";
   message += "Salu2\n";
   std::cout << termcolor::red << caras_art << termcolor::reset ;
