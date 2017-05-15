@@ -21,13 +21,12 @@ void deflacionar(MatrixXf& B, RowVectorXf& v, int lambda){
   B = B - lambda*vt*v;
 }
 
-void transfCaracteristica(MatrixXf& M_x, unsigned int k, MatrixXf& Vt){
+void transfCaracteristica(MatrixXf& M_x, unsigned int k, unsigned int its, MatrixXf& Vt){
     Vt.resize(k, M_x.rows());
 
-    int iteraciones = 100;
     for (size_t i = 0; i < k; i++) {
         RowVectorXf v = M_x.row(0); // un vector cualquiera
-        int lambda = metodoPotencia(M_x,v,iteraciones);
+        int lambda = metodoPotencia(M_x,v,its);
         deflacionar(M_x,v,lambda);
         Vt.row(i) = v;
     }
@@ -147,7 +146,7 @@ int main(int argc, char const *argv[]) {
     // Busco la transformación característica
     std::cout << "Armando TL al espacio copado" << std::flush;
     MatrixXf Vt;
-    transfCaracteristica(M_x,k,Vt);
+    transfCaracteristica(M_x,k,100,Vt);
     std::cout << "Armando TL al espacio copado..." << termcolor::green << "OK" << termcolor::reset << std::endl;
 
     std::cout << "Pasando imagenes a nuevo espacio" << std::flush;
