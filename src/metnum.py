@@ -12,7 +12,7 @@ def build():
 def compile():
   for source in sources:
     # meto tambien flag de debug
-    run(compiler, '-O2', '-g', '-c', source+'.cpp', '-o', source+'.o')
+    run(compiler, '-O2', '-g', '-std=c++11', '-c', source+'.cpp', '-o', source+'.o')
 
 def link():
   objects = [s+'.o' for s in sources]
