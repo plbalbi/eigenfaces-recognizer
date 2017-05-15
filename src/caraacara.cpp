@@ -1,10 +1,25 @@
-#include "PGMDozer.hpp"
-#include "parser.hpp"
-#include <iostream>
+#include "caraacara.hpp"
+
+// -------------- separador de bajo presupuesto --------------
+// Reduccion de espacio
+int metodoPotencia(MatrixXf& B, RowVectorXf& v, int iteraciones);
+void deflacionar(MatrixXf& B, RowVectorXf& v, int lambda);
+int norma2(const RowVectorXf& v){
+  RowVectorXf v_copy = v;
+  return sqrt(v.dot(v));
+
+}
+
+// -------------- separador de bajo presupuesto --------------
+// Clasificacion
+int kNN();
+// -------------- separador de bajo presupuesto --------------
+
 
 
 int main(int argc, char const *argv[]) {
-    
+
+    // Mostrar help si no hay 1 parametro
     if (argc != 2) {
       show_help();
       return 0;
