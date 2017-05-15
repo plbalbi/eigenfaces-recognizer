@@ -44,7 +44,11 @@ int kNN(const MatrixXf& X, const RowVectorXf& v, int img_por_sujeto, int k){
     int cant_muestras = X.rows();
     vector<double> distancias(cant_muestras);
     for (int i = 0; i < cant_muestras; i++) {
-        distancias[i] = (X.row(i) - v).norm();
+        RowVectorXf temp(X.cols());
+        for (size_t j = 0; j < temp.cols(); j++) {
+            temp(j) = X(i,j) - v(j);
+        }
+        distancias[i] = temp.norm();
     }
 
     // Me guardo los índices de los k vecinos más cercanos
@@ -72,7 +76,7 @@ int kNN(const MatrixXf& X, const RowVectorXf& v, int img_por_sujeto, int k){
     int max_count = 0;
     int max_clase = 0;
     for (int i = 0; i < k; i++) {
-        int clase = clases[i]; 
+        int clase = clases[i];
         int count = 0; // voy a contar cuantos 'clase' hay en 'clases'
         for (int j = 0; j < k; j++) {
             if (clase == clases[j]) count++;
@@ -177,6 +181,8 @@ int main(int argc, char const *argv[]) {
       }
     }
     
+    std::cout << "Pasando imagenes a nuevo espacio" << std::flush;
+
     // Testeando: así queda cada imagen de entrenamiento en el nuevo espacio
     //for (size_t s = 0; s < sujetos.size(); s++) {
         //std::cout << "Base del sujeto " << s <<":" << '\n';
@@ -198,6 +204,22 @@ int main(int argc, char const *argv[]) {
     
     std::cout << "Pasando imagenes a nuevo espacio..." << termcolor::green << "   OK" << termcolor::reset << std::endl;
 
+    // Corriendo reconocimiento de caras
+    std::cout << "------- RECONOCIENDO CARAS ------------" << '\n';
+    MatrixXf V = Vt.transpose();
+    int vecinos = 5;
+    MatrixXf X_mono = X*V;
+    for (size_t i = 0; i < tests.size(); i++) {
+        RowVectorXf v;
+        const char* ruta = tests[i].path.c_str();
+        get_image(ruta,img_ancho,img_alto,v);
+        v -= media;
+        v /= sqrt((double)(sujetos.size()*img_por_sujeto -1));
+        v = v*V;
+        std::cout << "Imagen convertida: " << v << '\n';
+        int res = kNN(X_mono,v,img_por_sujeto,vecinos);
+        std::cout << "A " << tests[i].respuesta << " se lo identificó como " << res<< '\n';
+    }
 
     // testeando metodo potencia
     /*
