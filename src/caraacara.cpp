@@ -97,12 +97,11 @@ int main(int argc, char const *argv[]) {
     for (size_t s = 0; s < sujetos.size(); s++) {
         std::cout << "Base del sujeto " << s <<":" << '\n';
         for (size_t i = 0; i < img_por_sujeto; i++) {
-            RowVectorXf x_i;
-            const char* ruta = sujetos[s][i].c_str();
-            get_image(ruta,img_ancho,img_alto,x_i);
-            x_i -= media;
-            VectorXf x_it = x_i.transpose();
-            std::cout << Vt*x_it << '\n' << '\n';
+            VectorXf x_i(img_alto*img_ancho);
+            for (size_t j = 0; j < img_alto*img_ancho; j++) {
+                x_i(j) = X(s*sujetos[s].size()+i,j);
+            }
+            std::cout << Vt*x_i << '\n' << '\n';
         }
     }
 
