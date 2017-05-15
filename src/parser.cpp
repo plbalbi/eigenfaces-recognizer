@@ -28,7 +28,8 @@ void read_input(const char* input_path, unsigned int &img_ancho, unsigned int &i
             string img;
             input >> img;
             img = dir + img + ".pgm";
-            s.push_back(img);
+            const char* gola = img.c_str();
+            s.push_back(gola);
         }
         sujetos.push_back(s);
     }
