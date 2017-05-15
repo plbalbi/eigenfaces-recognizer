@@ -46,6 +46,23 @@ void get_image(const char* image_route, unsigned int ancho, unsigned int alto, R
     source.close();
 }
 
+
+void save_image(const char* image_route, unsigned int ancho, unsigned int alto, RowVectorXf& imagen){
+    std::fstream stream(image_route, std::fstream::out);
+    if (!stream) {
+        std::cerr << "ERROR: Hubo un problema al abrir la imagen" << std::endl;
+    }
+    stream << "P5" << std::endl;
+    stream << "# Hecha por el grupo de tp mas copado" << std::endl;
+    stream << ancho << " " << alto << std::endl;
+    stream << 255 << std::endl;
+    for (int i = 0; i < ancho*alto; i++) {
+      char temp = int(imagen(0,i));
+      stream << temp;
+    }
+    stream.close();
+}
+
 void show_help(){
    
   std::string caras_art = "     ___          ___          ___          ___          ___     \n";
