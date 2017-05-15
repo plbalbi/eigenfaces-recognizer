@@ -4,9 +4,19 @@
 // Reduccion de espacio
 int metodoPotencia(MatrixXf& B, RowVectorXf& v, int iteraciones);
 void deflacionar(MatrixXf& B, RowVectorXf& v, int lambda);
-int norma2(const RowVectorXf& v){
-  RowVectorXf v_copy = v;
-  return sqrt(v.dot(v));
+
+
+
+void transfCaracteristica(MatrixXf& M_x, unsigned int k, MatrixXf& Vt){
+    Vt.resize(k, M_x.rows());
+
+    int iteraciones = 10;
+    for (size_t i = 0; i < k; i++) {
+        RowVectorXf v;
+        int lambda = metodoPotencia(M_x,v,iteraciones);
+        deflacionar(M_x,v,lambda);
+        Vt.row(i) = v;
+    }
 
 }
 
