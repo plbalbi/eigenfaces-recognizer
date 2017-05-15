@@ -88,6 +88,24 @@ int main(int argc, char const *argv[]) {
     M_x *= 1/((double)(sujetos.size()*img_por_sujeto -1));
 
 
+    // Busco la transformación característica
+    MatrixXf Vt;
+    transfCaracteristica(M_x,k,Vt);
+
+
+    // Testeando: así queda cada imagen de entrenamiento en el nuevo espacio
+    for (size_t s = 0; s < sujetos.size(); s++) {
+        std::cout << "Base del sujeto " << s <<":" << '\n';
+        for (size_t i = 0; i < img_por_sujeto; i++) {
+            RowVectorXf x_i;
+            const char* ruta = sujetos[s][i].c_str();
+            get_image(ruta,img_ancho,img_alto,x_i);
+            x_i -= media;
+            VectorXf x_it = x_i.transpose();
+            std::cout << Vt*x_it << '\n' << '\n';
+        }
+    }
+
 
     // testeando metodo potencia
     /*
@@ -101,10 +119,6 @@ int main(int argc, char const *argv[]) {
     */
 
 
-    MatrixXf Vt;
-
-    transfCaracteristica(M_x,2,Vt);
-    std::cout << Vt << '\n';
 
 
     return 0;
