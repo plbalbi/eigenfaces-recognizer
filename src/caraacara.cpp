@@ -1,4 +1,6 @@
 #include "caraacara.hpp"
+#include <vector>
+#include <cfloat>
 
 // -------------- separador de bajo presupuesto --------------
 // Reduccion de espacio
@@ -33,7 +35,58 @@ void transfCaracteristica(MatrixXf& M_x, unsigned int k, MatrixXf& Vt){
 
 // -------------- separador de bajo presupuesto --------------
 // Clasificacion
-int kNN();
+int kNN(const MatrixXf& X, const RowVectorXf& v, int img_por_sujeto, int k){
+    // X es la matriz cuyas filas son las muestras de entrenamiento
+    // Hay 'cant_sujetos' clases, y para cada una, 'img_por_sujeto' muestras
+    // A los elementos X[s*img_por_sujeto..s*img_por_sujeto+img_por_sujeto)
+    // los vamos a asignar a la clase 'i'. Queremos ver a que clase pertenece v
+
+    // Calculo distancias
+    int cant_muestras = X.rows();
+    vector<double> distancias(cant_muestras);
+    for (int i = 0; i < cant_muestras; i++) {
+        distancias[i] = (X.row(i) - v).norm();
+    }
+
+    // Me guardo los índices de los k vecinos más cercanos
+    // TODO si hubiera distancias iguales no se comporta como debería esta parte
+    vector<int> indices(k);
+    vector<double> minimos(k, DBL_MAX);
+    for (int i = 0; i < k; i++) { // k vecinos
+        for (int j = 0; j < cant_muestras; j++) { // busco sobre las muestras
+            if (i == 0 || distancias[j] > minimos[i-1]) { // para buscar el i-esimo mínimo
+                if (minimos[i] > distancias[j]) {
+                    minimos[i] = distancias[j];
+                    indices[i] = j;
+                }
+            }
+        }
+    }
+
+    // Transformo los índices de los vecinos en las clases de los mismos
+    vector<int> clases(k);
+    for (int i = 0; i < k; i++) {
+        clases[i] = indices[i] % img_por_sujeto;
+    }
+
+    // Cuento qué clase tiene más votos
+    int max_count = 0;
+    int max_clase = 0;
+    for (int i = 0; i < k; i++) {
+        int clase = clases[i]; 
+        int count = 0; // voy a contar cuantos 'clase' hay en 'clases'
+        for (int j = 0; j < k; j++) {
+            if (clase == clases[j]) count++;
+        }
+        if (count > max_count) {
+            max_clase = clase;
+            max_count = count;
+        }
+    }
+
+    return max_clase;
+}
+
 // -------------- separador de bajo presupuesto --------------
 
 

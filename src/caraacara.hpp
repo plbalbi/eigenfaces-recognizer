@@ -19,7 +19,7 @@ int inline norma2(const RowVectorXf& v){ return sqrt(v.dot(v)); };
 
 // -------------- separador de bajo presupuesto --------------
 // Clasificacion
-int kNN();
+int kNN(const MatrixXf& X, const RowVectorXf& v, int img_por_sujeto, int k);
 // inline porque solo sería multiplicar un vector
 // Definirla aca mismo
 void inline reducirEspacio(RowVectorXf& imagen, MatrixXf& TL);
