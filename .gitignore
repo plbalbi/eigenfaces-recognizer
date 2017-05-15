@@ -1,6 +1,7 @@
 # Directorios
 data/
 informe/
+src/sujetos/
 
 # Filetypes
 .gdb*
