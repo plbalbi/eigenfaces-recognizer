@@ -10,7 +10,7 @@ void test_metodoPotencia(){
     std::cout << "TEST " << i << ":\t\t";
     MatrixXf M = MatrixXf::Random(10,10);
     VectorXf v = VectorXf::Random(10,1);
-    int l = metodoPotencia(M, v, 100);
+    float l = metodoPotencia(M, v, 100);
     VectorXf r = M*v - l*v;
     // std::cout << '\n' << r.transpose() << '\n';
     if (r.norm() < umbral) {
@@ -31,8 +31,8 @@ void test_metodoPotencia2(){
     M << 1, 5,
          0, 6;
     VectorXf v = VectorXf::Random(2 ,1);
-    int l = metodoPotencia(M, v, 100);
-    
+    float l = metodoPotencia(M, v, 100);
+
     if (abs(l - 6) < umbral) {
         std::cout << termcolor::green << "OK" << termcolor::reset << '\n';
     }else{

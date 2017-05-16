@@ -34,18 +34,18 @@ void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned in
     M_x *= 1/((double)(sujetos.size()*img_por_sujeto -1));
 }
 
-int metodoPotencia(const MatrixXf& B, VectorXf& v, int iteraciones){
+float metodoPotencia(const MatrixXf& B, VectorXf& v, int iteraciones){
     for (int i = 0; i < iteraciones; i++) {
         v = B*v;
         v *= (1/v.norm());
     }
     RowVectorXf vt = v.transpose();
-    int lambda = vt*(B*v);
+    float lambda = vt*(B*v);
     lambda = lambda/(vt*v);
     return lambda;
 }
 
-void deflacionar(MatrixXf& B, VectorXf& v, int lambda){
+void deflacionar(MatrixXf& B, VectorXf& v, float lambda){
     RowVectorXf vt = v.transpose();
     B = B - lambda*v*vt;
 }
@@ -55,7 +55,7 @@ void transfCaracteristica(MatrixXf& M_x, unsigned int k, unsigned int its, Matri
 
     for (size_t i = 0; i < k; i++) {
         VectorXf v = M_x.col(0); // un vector cualquiera
-        int lambda = metodoPotencia(M_x,v,its);
+        float lambda = metodoPotencia(M_x,v,its);
         deflacionar(M_x,v,lambda);
         V.col(i) = v;
     }
@@ -126,7 +126,7 @@ int main(int argc, char const *argv[]) {
 
     // Mostrar help si no hay 1 parametro
     if ((argc == 2) && argv[1] == std::to_string(42)) {
-        //test_metodoPotencia();
+        test_metodoPotencia();
         test_metodoPotencia2();
         return 0;
     }else
