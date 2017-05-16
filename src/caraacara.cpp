@@ -3,7 +3,36 @@
 #include <cfloat>
 
 // -------------- separador de bajo presupuesto --------------
-// Reduccion de espacio 5
+
+// Reduccion de espacio
+
+void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned int img_por_sujeto, vector<sujeto> sujetos, MatrixXf &X, MatrixXf &M_x, RowVectorXf &media){
+    X.resize(img_por_sujeto*sujetos.size(), img_alto*img_ancho);
+    media.resize(1, img_alto*img_ancho);
+    media.setZero();
+    for (size_t s = 0; s < sujetos.size(); s++) {
+        for (size_t i = 0; i < img_por_sujeto; i++) {
+            RowVectorXf x_i;
+            const char* ruta = sujetos[s][i].c_str();
+            get_image(ruta,img_ancho,img_alto,x_i);
+            media = media + x_i;
+            X.row(s*sujetos[s].size()+i) = x_i;
+        }
+    }
+    media = media / (img_por_sujeto*sujetos.size());
+    // Ahora a cada fila le resto la media
+    for (size_t i = 0; i < sujetos.size()*img_por_sujeto; i++) {
+        X.row(i) -= media;
+    }
+
+
+    // Calculo la matriz de covarianza
+    M_x.resize(img_alto*img_ancho,img_alto*img_ancho);
+    MatrixXf Xt = X.transpose();
+    M_x = Xt*X;
+    M_x *= 1/((double)(sujetos.size()*img_por_sujeto -1));
+}
+
 int metodoPotencia(const MatrixXf& B, RowVectorXf& v, int iteraciones){
   VectorXf vt = v.transpose();
   for (int i = 0; i < iteraciones; i++) {
@@ -117,32 +146,14 @@ int main(int argc, char const *argv[]) {
     read_input(in_path, img_ancho, img_alto, k, sujetos, tests);
     std::cout << "Leyendo entrada de datos...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
     if (sujetos.size()>0) img_por_sujeto = sujetos[0].size();
-    // Pongo las imágenes como filas de 'X', calculando la media al mismo tiempo
-    std::cout << "Armando matriz de covarianza...\r" << std::flush;
-    MatrixXf X(img_por_sujeto*sujetos.size(), img_alto*img_ancho);
-    RowVectorXf media(1, img_alto*img_ancho);
-    media.setZero();
-    for (size_t s = 0; s < sujetos.size(); s++) {
-        for (size_t i = 0; i < img_por_sujeto; i++) {
-            RowVectorXf x_i;
-            const char* ruta = sujetos[s][i].c_str();
-            get_image(ruta,img_ancho,img_alto,x_i);
-            media = media + x_i;
-            X.row(s*sujetos[s].size()+i) = x_i;
-        }
-    }
-    media = media / (img_por_sujeto*sujetos.size());
-    // Ahora a cada fila le resto la media
-    for (size_t i = 0; i < sujetos.size()*img_por_sujeto; i++) {
-        X.row(i) -= media;
-    }
 
 
     // Calculo la matriz de covarianza
-    MatrixXf M_x(img_alto*img_ancho,img_alto*img_ancho);
-    MatrixXf Xt = X.transpose();
-    M_x = Xt*X;
-    M_x *= 1/((double)(sujetos.size()*img_por_sujeto -1));
+    std::cout << "Armando matriz de covarianza...\r" << std::flush;
+    MatrixXf X;
+    MatrixXf M_x;
+    RowVectorXf media;
+    matrizCovarianza(img_alto, img_ancho, img_por_sujeto, sujetos, X, M_x, media);
     std::cout << "Armando matriz de covarianza...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
 
@@ -154,7 +165,7 @@ int main(int argc, char const *argv[]) {
 
     // imprimo en sujeto las fotitos de los autovectores
     char* base_dir = "sujetos/";
-    for (int i = 0; i < k; i++) {
+    for (size_t i = 0; i < k; i++) {
       std::string save_route = base_dir;
       save_route += "autovector";
       save_route += "_";
@@ -166,16 +177,16 @@ int main(int argc, char const *argv[]) {
 
 
     std::cout << "Pasando imagenes a nuevo espacio...\r" << std::flush;
-
+    MatrixXf Xt = X.transpose();
     // Vector que contiene cada cara de cada sujetos en un vector, ya convertida al nuevo espacio
 
     std::vector< std::vector<VectorXf> > clase_de_sujetos(sujetos.size());
     MatrixXf PXt = MatrixXf(k, sujetos.size()*img_por_sujeto);
     PXt = Vt * Xt;
 
-    for (int i = 0; i < sujetos.size(); i++){
+    for (size_t i = 0; i < sujetos.size(); i++){
       clase_de_sujetos[i] = std::vector<VectorXf>(img_por_sujeto);
-      for (int j = 0; j < img_por_sujeto; j++){
+      for (size_t j = 0; j < img_por_sujeto; j++){
         clase_de_sujetos[i][j] = PXt.col(i*img_por_sujeto+j);
       }
     }
@@ -193,8 +204,8 @@ int main(int argc, char const *argv[]) {
         //}
     //}
     //
-    for (int i = 0; i < sujetos.size(); i++) {
-      for (int j = 0; j < img_por_sujeto; j++) {
+    for (size_t i = 0; i < sujetos.size(); i++) {
+      for (size_t j = 0; j < img_por_sujeto; j++) {
         std::cout << "Sujeto " << i << " | imagen " << j << ":" << std::endl;
         std::cout << clase_de_sujetos[i][j] << std::endl;
       }
