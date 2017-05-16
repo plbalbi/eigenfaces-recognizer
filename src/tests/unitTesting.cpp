@@ -3,12 +3,14 @@
 
 void test_metodoPotencia(){
     srand(time(NULL));
-    float umbral = .1;
+    float umbral = .01;
     int OK_count = 0;
     int test_qty = 100;
     for (int i = 0; i < test_qty; i++) {
         std::cout << "TEST " << i << ":\t\t";
-        MatrixXf M = MatrixXf::Random(10,10);
+        MatrixXf tempM = MatrixXf::Random(10,10);
+        MatrixXf M_t = tempM.transpose();
+        MatrixXf M = M_t*tempM;
         VectorXf v = VectorXf::Random(10,1);
         float l = metodoPotencia(M, v, 100);
         VectorXf r = M*v - l*v;
@@ -19,9 +21,9 @@ void test_metodoPotencia(){
         }else{
             std::cout << termcolor::red << "FALLA" << termcolor::reset << '\n';
         }
-        std::cout << "-----------------------------------------" << '\n';
-        std::cout << "Paso " << OK_count << " tests de " << test_qty << '\n';
     }
+    std::cout << "-----------------------------------------" << '\n';
+    std::cout << "Paso " << OK_count << " tests de " << test_qty << '\n';
 }
 
 void test_metodoPotencia2(){
