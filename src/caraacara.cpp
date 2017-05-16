@@ -33,31 +33,30 @@ void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned in
     M_x *= 1/((double)(sujetos.size()*img_por_sujeto -1));
 }
 
-int metodoPotencia(const MatrixXf& B, RowVectorXf& v, int iteraciones){
-  VectorXf vt = v.transpose();
+int metodoPotencia(const MatrixXf& B, VectorXf& v, int iteraciones){
   for (int i = 0; i < iteraciones; i++) {
-    v = B*vt;
+    v = B*v;
     v *= (1/v.norm());
-    vt = v.transpose();
   }
-  int lambda = v*(B*vt);
-  lambda /= (v*vt);
+  RowVectorXf vt = v.transpose();
+  int lambda = vt*(B*v);
+  lambda = lambda/(vt*v);
   return lambda;
 }
 
-void deflacionar(MatrixXf& B, RowVectorXf& v, int lambda){
-  VectorXf vt = v.transpose();
-  B = B - lambda*vt*v;
+void deflacionar(MatrixXf& B, VectorXf& v, int lambda){
+  RowVectorXf vt = v.transpose();
+  B = B - lambda*v*vt;
 }
 
-void transfCaracteristica(MatrixXf& M_x, unsigned int k, unsigned int its, MatrixXf& Vt){
-    Vt.resize(k, M_x.rows());
+void transfCaracteristica(MatrixXf& M_x, unsigned int k, unsigned int its, MatrixXf& V){
+    V.resize(M_x.rows(),k);
 
     for (size_t i = 0; i < k; i++) {
-        RowVectorXf v = M_x.row(0); // un vector cualquiera
+        VectorXf v = M_x.col(0); // un vector cualquiera
         int lambda = metodoPotencia(M_x,v,its);
         deflacionar(M_x,v,lambda);
-        Vt.row(i) = v;
+        V.col(i) = v;
     }
 }
 
@@ -159,12 +158,16 @@ int main(int argc, char const *argv[]) {
 
     // Busco la transformación característica
     std::cout << "Armando TL al espacio copado...\r" << std::flush;
-    MatrixXf Vt;
-    transfCaracteristica(M_x,k,100,Vt);
+    MatrixXf V;
+    transfCaracteristica(M_x,k,100,V);
+    MatrixXf Vt = V.transpose();
     std::cout << "Armando TL al espacio copado...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
     // imprimo en sujeto las fotitos de los autovectores
     char* base_dir = "sujetos/";
+    ofstream autovectores;
+    autovectores.open("autovectores.txt");
+    autovectores << V*(double)(sujetos.size()*img_por_sujeto -1) << '\n';
     for (size_t i = 0; i < k; i++) {
       std::string save_route = base_dir;
       save_route += "autovector";
@@ -174,6 +177,7 @@ int main(int argc, char const *argv[]) {
       RowVectorXf sujeto_en_espacio = (Vt.row(i))*((double)(sujetos.size()*img_por_sujeto -1))+media;
       save_image(save_route.c_str(), 92, 112, sujeto_en_espacio);
     }
+    autovectores.close();
 
 
     std::cout << "Pasando imagenes a nuevo espacio...\r" << std::flush;
@@ -215,7 +219,6 @@ int main(int argc, char const *argv[]) {
 
     // Corriendo reconocimiento de caras
     std::cout << "------- RECONOCIENDO CARAS ------------" << '\n';
-    MatrixXf V = Vt.transpose();
     int vecinos = 5;
     MatrixXf X_mono = X*V;
     for (size_t i = 0; i < tests.size(); i++) {
