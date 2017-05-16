@@ -1,4 +1,5 @@
 #include "unitTesting.hpp"
+#include <cmath>
 
 void test_metodoPotencia(){
     srand(time(NULL));
@@ -21,4 +22,22 @@ void test_metodoPotencia(){
   }
     std::cout << "-----------------------------------------" << '\n';
     std::cout << "Paso " << OK_count << " tests de " << test_qty << '\n';
+}
+
+void test_metodoPotencia2(){
+    std::cout << "Test método de potencia 2... ";
+    float umbral = 0.01;
+    MatrixXf M(2, 2);
+    M << 1, 5,
+         0, 6;
+    VectorXf v = VectorXf::Random(2 ,1);
+    int l = metodoPotencia(M, v, 100);
+    
+    if (abs(l - 6) < umbral) {
+        std::cout << termcolor::green << "OK" << termcolor::reset << '\n';
+    }else{
+        std::cout << termcolor::red << "FALLA" << termcolor::reset << '\n';
+        std::cout << "Resultado obtenido: " << l << "\n";
+        std::cout << "Resultado esperado: " << 6 << "\n\n";
+    }
 }

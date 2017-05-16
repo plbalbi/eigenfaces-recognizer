@@ -126,7 +126,8 @@ int main(int argc, char const *argv[]) {
 
     // Mostrar help si no hay 1 parametro
     if ((argc == 2) && argv[1] == std::to_string(42)) {
-        test_metodoPotencia();
+        //test_metodoPotencia();
+        test_metodoPotencia2();
         return 0;
     }else
     if (argc != 3) {

@@ -4,5 +4,6 @@
 #include <time.h>
 
 void test_metodoPotencia();
+void test_metodoPotencia2();
 
 #endif
