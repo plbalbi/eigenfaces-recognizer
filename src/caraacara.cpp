@@ -125,9 +125,10 @@ int kNN(const MatrixXf& X, const RowVectorXf& v, int img_por_sujeto, int k){
 int main(int argc, char const *argv[]) {
 
     // Mostrar help si no hay 1 parametro
-    if (argc == 2 && argv[1]=="UT") {
+    if ((argc == 2) && argv[1] == std::to_string(42)) {
       test_metodoPotencia();
-    }
+      return 0;
+    }else
     if (argc != 3) {
       show_help();
       return 0;
