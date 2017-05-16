@@ -12,9 +12,9 @@
 
 // -------------- separador de bajo presupuesto --------------
 // Reduccion de espacio
-int metodoPotencia(const MatrixXf& B, RowVectorXf& v, int iteraciones);
-void deflacionar(MatrixXf& B, RowVectorXf& v, int lambda);
-void transfCaracteristica(MatrixXf& M_x, unsigned int k, unsigned int its, MatrixXf& Vt);
+int metodoPotencia(const MatrixXf& B, VectorXf& v, int iteraciones);
+void deflacionar(MatrixXf& B, VectorXf& v, int lambda);
+void transfCaracteristica(MatrixXf& M_x, unsigned int k, unsigned int its, MatrixXf& V);
 int inline norma2(const RowVectorXf& v){ return sqrt(v.dot(v)); };
 
 // -------------- separador de bajo presupuesto --------------
