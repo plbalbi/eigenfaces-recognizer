@@ -35,19 +35,19 @@ void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned in
 }
 
 int metodoPotencia(const MatrixXf& B, VectorXf& v, int iteraciones){
-  for (int i = 0; i < iteraciones; i++) {
-    v = B*v;
-    v *= (1/v.norm());
-  }
-  RowVectorXf vt = v.transpose();
-  int lambda = vt*(B*v);
-  lambda = lambda/(vt*v);
-  return lambda;
+    for (int i = 0; i < iteraciones; i++) {
+        v = B*v;
+        v *= (1/v.norm());
+    }
+    RowVectorXf vt = v.transpose();
+    int lambda = vt*(B*v);
+    lambda = lambda/(vt*v);
+    return lambda;
 }
 
 void deflacionar(MatrixXf& B, VectorXf& v, int lambda){
-  RowVectorXf vt = v.transpose();
-  B = B - lambda*v*vt;
+    RowVectorXf vt = v.transpose();
+    B = B - lambda*v*vt;
 }
 
 void transfCaracteristica(MatrixXf& M_x, unsigned int k, unsigned int its, MatrixXf& V){
@@ -126,12 +126,12 @@ int main(int argc, char const *argv[]) {
 
     // Mostrar help si no hay 1 parametro
     if ((argc == 2) && argv[1] == std::to_string(42)) {
-      test_metodoPotencia();
-      return 0;
+        test_metodoPotencia();
+        return 0;
     }else
     if (argc != 3) {
-      show_help();
-      return 0;
+        show_help();
+        return 0;
     }
 
     char const* in_path;
@@ -194,10 +194,10 @@ int main(int argc, char const *argv[]) {
     PXt = Vt * Xt;
 
     for (size_t i = 0; i < sujetos.size(); i++){
-      clase_de_sujetos[i] = std::vector<VectorXf>(img_por_sujeto);
-      for (size_t j = 0; j < img_por_sujeto; j++){
-        clase_de_sujetos[i][j] = PXt.col(i*img_por_sujeto+j);
-      }
+        clase_de_sujetos[i] = std::vector<VectorXf>(img_por_sujeto);
+        for (size_t j = 0; j < img_por_sujeto; j++){
+            clase_de_sujetos[i][j] = PXt.col(i*img_por_sujeto+j);
+        }
     }
 
 
@@ -214,10 +214,10 @@ int main(int argc, char const *argv[]) {
     //}
     //
     for (size_t i = 0; i < sujetos.size(); i++) {
-      for (size_t j = 0; j < img_por_sujeto; j++) {
-        std::cout << "Sujeto " << i << " | imagen " << j << ":" << std::endl;
-        std::cout << clase_de_sujetos[i][j] << std::endl;
-      }
+        for (size_t j = 0; j < img_por_sujeto; j++) {
+            std::cout << "Sujeto " << i << " | imagen " << j << ":" << std::endl;
+            std::cout << clase_de_sujetos[i][j] << std::endl;
+        }
     }
 
     std::cout << "Pasando imagenes a nuevo espacio...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
