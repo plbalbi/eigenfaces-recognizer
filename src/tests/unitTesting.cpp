@@ -19,7 +19,6 @@ void test_metodoPotencia(){
     }else{
         std::cout << termcolor::red << "FALLA" << termcolor::reset << '\n';
     }
-  }
     std::cout << "-----------------------------------------" << '\n';
     std::cout << "Paso " << OK_count << " tests de " << test_qty << '\n';
 }
