@@ -3,7 +3,7 @@
 #include <cfloat>
 
 // -------------- separador de bajo presupuesto --------------
-// Reduccion de espacio
+// Reduccion de espacio 5
 int metodoPotencia(const MatrixXf& B, RowVectorXf& v, int iteraciones){
   VectorXf vt = v.transpose();
   for (int i = 0; i < iteraciones; i++) {
@@ -93,7 +93,6 @@ int kNN(const MatrixXf& X, const RowVectorXf& v, int img_por_sujeto, int k){
 // -------------- separador de bajo presupuesto --------------
 
 
-
 int main(int argc, char const *argv[]) {
 
     // Mostrar help si no hay 1 parametro
@@ -116,7 +115,7 @@ int main(int argc, char const *argv[]) {
 
     std::cout << "Leyendo entrada de datos...\r" << std::flush;
     read_input(in_path, img_ancho, img_alto, k, sujetos, tests);
-    std::cout << "Leyendo entrada de datos..." << termcolor::green << "   OK" << termcolor::reset << std::endl;
+    std::cout << "Leyendo entrada de datos...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
     if (sujetos.size()>0) img_por_sujeto = sujetos[0].size();
     // Pongo las imágenes como filas de 'X', calculando la media al mismo tiempo
     std::cout << "Armando matriz de covarianza...\r" << std::flush;
@@ -144,14 +143,14 @@ int main(int argc, char const *argv[]) {
     MatrixXf Xt = X.transpose();
     M_x = Xt*X;
     M_x *= 1/((double)(sujetos.size()*img_por_sujeto -1));
-    std::cout << "Armando matriz de covarianza..." << termcolor::green << "   OK" << termcolor::reset << std::endl;
+    std::cout << "Armando matriz de covarianza...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
 
     // Busco la transformación característica
     std::cout << "Armando TL al espacio copado...\r" << std::flush;
     MatrixXf Vt;
     transfCaracteristica(M_x,k,100,Vt);
-    std::cout << "Armando TL al espacio copado..." << termcolor::green << "   OK" << termcolor::reset << std::endl;
+    std::cout << "Armando TL al espacio copado...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
     // imprimo en sujeto las fotitos de los autovectores
     char* base_dir = "sujetos/";
@@ -180,8 +179,7 @@ int main(int argc, char const *argv[]) {
         clase_de_sujetos[i][j] = PXt.col(i*img_por_sujeto+j);
       }
     }
-    
-    std::cout << "Pasando imagenes a nuevo espacio" << std::flush;
+
 
     // Testeando: así queda cada imagen de entrenamiento en el nuevo espacio
     //for (size_t s = 0; s < sujetos.size(); s++) {
@@ -201,8 +199,8 @@ int main(int argc, char const *argv[]) {
         std::cout << clase_de_sujetos[i][j] << std::endl;
       }
     }
-    
-    std::cout << "Pasando imagenes a nuevo espacio..." << termcolor::green << "   OK" << termcolor::reset << std::endl;
+
+    std::cout << "Pasando imagenes a nuevo espacio...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
     // Corriendo reconocimiento de caras
     std::cout << "------- RECONOCIENDO CARAS ------------" << '\n';
