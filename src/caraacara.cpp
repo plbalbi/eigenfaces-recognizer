@@ -14,7 +14,7 @@ int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, cons
     std::vector< std::pair<int, double> > distances;
     for (int s = 0; s < clase_de_sujetos.size(); s++) {
        for (int i = 0; i < clase_de_sujetos[0].size(); i++) {
-           distances.push_back(std::make_pair(s+1, distancia(clase_de_sujetos[s][i], v)));           
+           distances.push_back(std::make_pair(s+1, distancia(clase_de_sujetos[s][i], v)));
        }
     }
     std::sort(distances.begin(), distances.end(), [](std::pair<int, double> a, std::pair<int, double> b){ return a.second < b.second; });
@@ -285,7 +285,12 @@ int main(int argc, char const *argv[]) {
         v = Vt*v;
         // std::cout << "Imagen convertida: " << endl << v << '\n';
         int res = fast_knn(clase_de_sujetos,v,vecinos);
-        std::cout << "(" + tests[i].path + ") " << tests[i].respuesta << " parece ser " << res<< '\n';
+        std::cout << "(" + tests[i].path + ") ";
+        if (tests[i].respuesta == res) {
+            std::cout << termcolor::green << tests[i].respuesta << " parece ser " << res<< termcolor::reset << '\n';
+        }else{
+            std::cout << termcolor::red << tests[i].respuesta << " parece ser " << res<< termcolor::reset << '\n';
+        }
     }
 
     time_t end = time(NULL);
