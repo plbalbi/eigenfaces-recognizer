@@ -35,6 +35,8 @@ void read_input(const char* input_path, unsigned int &img_ancho, unsigned int &i
     }
 
     // empiezan las líneas de los tests
+    int cant_tests;
+    input >> cant_tests;
     string path;
     while (input >> path) {
         int res;
