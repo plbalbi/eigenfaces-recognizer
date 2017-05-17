@@ -225,6 +225,8 @@ int main(int argc, char const *argv[]) {
     // std::cout << clase_de_sujetos[0][0] << '\n';
 
     // Corriendo reconocimiento de caras
+    ofstream out;
+    out.open(out_path);
     std::cout << "############ RECONOCIENDO CARAS ############" << '\n';
     int vecinos = 1;
     MatrixXf X_mono = X*V;
@@ -236,10 +238,13 @@ int main(int argc, char const *argv[]) {
         vt -= media;
         v = vt.transpose();
         v = Vt*v;
+        vt = v.transpose();
+        out << vt << '\n';
         // std::cout << "Imagen convertida: " << endl << v << '\n';
         int res = kNN(clase_de_sujetos,v,vecinos);
         std::cout << "(" + tests[i].path + ") " << tests[i].respuesta << " parece ser " << res<< '\n';
     }
+    out.close();
 
     // testeando metodo potencia
     /*
