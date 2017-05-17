@@ -9,7 +9,7 @@
 
 void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned int img_por_sujeto, vector<sujeto> sujetos, MatrixXf &X, MatrixXf &M_x, RowVectorXf &media){
     X.resize(img_por_sujeto*sujetos.size(), img_alto*img_ancho);
-    media.resize(1, img_alto*img_ancho);
+    media.resize(img_alto*img_ancho);
     media.setZero();
     for (size_t s = 0; s < sujetos.size(); s++) {
         for (size_t i = 0; i < img_por_sujeto; i++) {
@@ -20,7 +20,7 @@ void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned in
             X.row(s*sujetos[s].size()+i) = x_i;
         }
     }
-    media = media / (img_por_sujeto*sujetos.size());
+    media = media / (float)(img_por_sujeto*sujetos.size());
     // Ahora a cada fila le resto la media
     for (size_t i = 0; i < sujetos.size()*img_por_sujeto; i++) {
         X.row(i) -= media;
@@ -31,7 +31,7 @@ void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned in
     M_x.resize(img_alto*img_ancho,img_alto*img_ancho);
     MatrixXf Xt = X.transpose();
     M_x = Xt*X;
-    M_x *= 1/((double)(sujetos.size()*img_por_sujeto -1));
+    M_x /= ((float)(sujetos.size()*img_por_sujeto -1));
 }
 
 float metodoPotencia(const MatrixXf& B, VectorXf& v, int iteraciones){
@@ -173,15 +173,21 @@ int main(int argc, char const *argv[]) {
     char* base_dir = "sujetos/";
     ofstream autovectores;
     autovectores.open("autovectores.txt");
-    autovectores << V*(double)(sujetos.size()*img_por_sujeto -1) << '\n';
+    // autovectores << V*(double)(sujetos.size()*img_por_sujeto -1) << '\n';
     for (size_t i = 0; i < k; i++) {
-      std::string save_route = base_dir;
-      save_route += "autovector";
-      save_route += "_";
-      save_route += std::to_string(i+1);
-      save_route += ".pgm";
-      RowVectorXf sujeto_en_espacio = (Vt.row(i))*((double)(sujetos.size()*img_por_sujeto -1))+media;
-      save_image(save_route.c_str(), 92, 112, sujeto_en_espacio);
+        std::string save_route = base_dir;
+        save_route += "autovector";
+        save_route += "_";
+        save_route += std::to_string(i+1);
+        save_route += ".pgm";
+        RowVectorXf sujeto_en_espacio = Vt.row(i);
+        RowVectorXf unos(img_alto*img_ancho);
+        unos.setOnes();
+        unos *= sujeto_en_espacio.minCoeff();
+        sujeto_en_espacio -= unos;
+        sujeto_en_espacio *= 255.0/(sujeto_en_espacio.maxCoeff());
+        autovectores << sujeto_en_espacio << '\n';
+        save_image(save_route.c_str(), 92, 112, sujeto_en_espacio);
     }
     autovectores.close();
 
@@ -204,14 +210,14 @@ int main(int argc, char const *argv[]) {
 
     // Testeando: así queda cada imagen de entrenamiento en el nuevo espacio
     //for (size_t s = 0; s < sujetos.size(); s++) {
-        //std::cout << "Base del sujeto " << s <<":" << '\n';
-        //for (size_t i = 0; i < img_por_sujeto; i++) {
-            //VectorXf x_i(img_alto*img_ancho);
-            //for (size_t j = 0; j < img_alto*img_ancho; j++) {
-                //x_i = X.col(s*sujetos[s].size()+i);
-            //}
-            //std::cout << Vt.transpose()*x_i << '\n' << '\n';
-        //}
+    //std::cout << "Base del sujeto " << s <<":" << '\n';
+    //for (size_t i = 0; i < img_por_sujeto; i++) {
+    //VectorXf x_i(img_alto*img_ancho);
+    //for (size_t j = 0; j < img_alto*img_ancho; j++) {
+    //x_i = X.col(s*sujetos[s].size()+i);
+    //}
+    //std::cout << Vt.transpose()*x_i << '\n' << '\n';
+    //}
     //}
     //
     for (size_t i = 0; i < sujetos.size(); i++) {

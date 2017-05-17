@@ -57,14 +57,14 @@ void save_image(const char* image_route, unsigned int ancho, unsigned int alto, 
     stream << ancho << " " << alto << std::endl;
     stream << 255 << std::endl;
     for (int i = 0; i < ancho*alto; i++) {
-      char temp = int(imagen(0,i));
+      unsigned char temp = char(imagen(0,i));
       stream << temp;
     }
     stream.close();
 }
 
 void show_help(){
-   
+
   std::string caras_art = "     ___          ___          ___          ___          ___     \n";
   caras_art += "    /  /\\        /  /\\        /  /\\        /  /\\        /  /\\    \n";
   caras_art += "   /  /:/       /  /::\\      /  /::\\      /  /::\\      /  /:/_   \n";
