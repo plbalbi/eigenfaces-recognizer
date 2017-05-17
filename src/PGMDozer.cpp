@@ -20,12 +20,14 @@ void get_image(const char* image_route, unsigned int ancho, unsigned int alto, R
     */
 
     //La imagen ya fue abierta aca
-    string filetype, comment, size, maxvalue;
-    getline(source, filetype); // numero mágico: formato de archivo
-    if (source.peek()=='#') {
-      getline(source, comment); // commentario
-    }
-    getline(source, size); // ancho alto
+    string version, comment, maxvalue;
+    int ancho_r, alto_r;
+    source >> version; // numero mágico: formato de archivo
+    if (source.peek()=='#') getline(source, comment); // si hay commentario
+    source >> ancho_r ; // ancho
+    if (source.peek()=='#') getline(source, comment); // si hay commentario
+    source >> alto_r ; // alto
+    if (source.peek()=='#') getline(source, comment); // si hay commentario
     getline(source, maxvalue); // maxValue
 
     /* DEBUG
@@ -39,9 +41,8 @@ void get_image(const char* image_route, unsigned int ancho, unsigned int alto, R
     unsigned char pixel;
     for (size_t i = 0; i < ancho*alto; i++) {
         pixel = source.get(); // El .get() avanza de a un char (byte)
-        imagen(0,i) = pixel;
+        imagen(i) = pixel;
     }
-
     //Cierro la imagen
     source.close();
 }
@@ -57,44 +58,44 @@ void save_image(const char* image_route, unsigned int ancho, unsigned int alto, 
     stream << ancho << " " << alto << std::endl;
     stream << 255 << std::endl;
     for (int i = 0; i < ancho*alto; i++) {
-      unsigned char temp = char(imagen(0,i));
-      stream << temp;
+        unsigned char temp = char(imagen(0,i));
+        stream << temp;
     }
     stream.close();
 }
 
 void show_help(){
 
-  std::string caras_art = "     ___          ___          ___          ___          ___     \n";
-  caras_art += "    /  /\\        /  /\\        /  /\\        /  /\\        /  /\\    \n";
-  caras_art += "   /  /:/       /  /::\\      /  /::\\      /  /::\\      /  /:/_   \n";
-  caras_art += "  /  /:/       /  /:/\\:\\    /  /:/\\:\\    /  /:/\\:\\    /  /:/ /\\  \n";
-  caras_art += " /  /:/  ___  /  /:/~/::\\  /  /:/~/:/   /  /:/~/::\\  /  /:/ /::\\ \n";
-  caras_art += "/__/:/  /  /\\/__/:/ /:/\\:\\/__/:/ /:/___/__/:/ /:/\\:\\/__/:/ /:/\\:\\ \n";
-  caras_art += "\\  \\:\\ /  /:/\\  \\:\\/:/__\\/\\  \\:\\/:::::/\\  \\:\\/:/__\\/\\  \\:\\/:/~/:/\n";
-  caras_art += " \\  \\:\\  /:/  \\  \\::/      \\  \\::/~~~~  \\  \\::/      \\  \\::/ /:/ \n";
-  caras_art += "  \\  \\:\\/:/    \\  \\:\\       \\  \\:\\       \\  \\:\\       \\__\\/ /:/  \n";
-  caras_art += "   \\  \\::/      \\  \\:\\       \\  \\:\\       \\  \\:\\        /__/:/   \n";
-  caras_art += "    \\__\\/        \\__\\/        \\__\\/        \\__\\/        \\__\\/    \n\n";
-  std::string message = "Uso de este super reconocedor de caras (no la revista):\n";
-  message += "\n";
-  message += "./tp [ruta al archivo de config] [archivo de salida]\n";
-  message += "\n";
-  message += "Salu2\n";
-  std::cout << termcolor::red << caras_art << termcolor::reset ;
-  std::cout << termcolor::bold << termcolor::red << "\t\t\tRECOGNIZER\n\n" << termcolor:: reset << std::endl;
-  std::cout << termcolor::blue << message << std::endl;
+    std::string caras_art = "     ___          ___          ___          ___          ___     \n";
+    caras_art += "    /  /\\        /  /\\        /  /\\        /  /\\        /  /\\    \n";
+    caras_art += "   /  /:/       /  /::\\      /  /::\\      /  /::\\      /  /:/_   \n";
+    caras_art += "  /  /:/       /  /:/\\:\\    /  /:/\\:\\    /  /:/\\:\\    /  /:/ /\\  \n";
+    caras_art += " /  /:/  ___  /  /:/~/::\\  /  /:/~/:/   /  /:/~/::\\  /  /:/ /::\\ \n";
+    caras_art += "/__/:/  /  /\\/__/:/ /:/\\:\\/__/:/ /:/___/__/:/ /:/\\:\\/__/:/ /:/\\:\\ \n";
+    caras_art += "\\  \\:\\ /  /:/\\  \\:\\/:/__\\/\\  \\:\\/:::::/\\  \\:\\/:/__\\/\\  \\:\\/:/~/:/\n";
+    caras_art += " \\  \\:\\  /:/  \\  \\::/      \\  \\::/~~~~  \\  \\::/      \\  \\::/ /:/ \n";
+    caras_art += "  \\  \\:\\/:/    \\  \\:\\       \\  \\:\\       \\  \\:\\       \\__\\/ /:/  \n";
+    caras_art += "   \\  \\::/      \\  \\:\\       \\  \\:\\       \\  \\:\\        /__/:/   \n";
+    caras_art += "    \\__\\/        \\__\\/        \\__\\/        \\__\\/        \\__\\/    \n\n";
+    std::string message = "Uso de este super reconocedor de caras (no la revista):\n";
+    message += "\n";
+    message += "./tp [ruta al archivo de config] [archivo de salida]\n";
+    message += "\n";
+    message += "Salu2\n";
+    std::cout << termcolor::red << caras_art << termcolor::reset ;
+    std::cout << termcolor::bold << termcolor::red << "\t\t\tRECOGNIZER\n\n" << termcolor:: reset << std::endl;
+    std::cout << termcolor::blue << message << std::endl;
 }
 
 // TESING
 /*
 int main(int argc, char *argv[]){
-    if (argc != 2) {
-        std::cerr << "ERROR: Faltaron/sobraron argumentos" << std::endl;
-    }
-    char* file = argv[1];
-    RowVectorXf imagen;
-    get_image(file, 92, 112, imagen);
-    return 0;
+if (argc != 2) {
+std::cerr << "ERROR: Faltaron/sobraron argumentos" << std::endl;
+}
+char* file = argv[1];
+RowVectorXf imagen;
+get_image(file, 92, 112, imagen);
+return 0;
 }
 */
