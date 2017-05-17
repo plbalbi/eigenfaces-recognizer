@@ -182,6 +182,14 @@ int main(int argc, char const *argv[]) {
     out.close();
     std::cout << "Armando TL al espacio copado...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
+    // La matrix X tiene la imagenes de entrenamiento
+    MatrixXf V_normalized = V;
+    VectorXf mean_vector = media.transpose();
+    save_image("sujetos/media.pgm", 92, 112, media);
+    for (size_t i = 0; i < V_normalized.cols(); i++) {
+      V_normalized.col(i) = V_normalized.col(i) /  V_normalized.col(i).norm();
+      V_normalized.col(i) = V_normalized.col(i).array().abs()*(255/V_normalized.col(i).maxCoeff());
+    }
 
     // imprimo en sujeto las fotitos de los autovectores
     char* base_dir = "sujetos/";
