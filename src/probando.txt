@@ -3,6 +3,7 @@ s1/ 4 6 1 2 3 8
 s2/ 4 6 1 2 3 8
 s3/ 4 6 1 2 3 8
 s4/ 4 6 1 2 3 8
+4
 ../data/ImagenesCarasRed/s1/5.pgm 1
 ../data/ImagenesCarasRed/s2/5.pgm 2
 ../data/ImagenesCarasRed/s3/5.pgm 3
