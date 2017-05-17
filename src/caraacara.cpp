@@ -63,21 +63,24 @@ void transfCaracteristica(MatrixXf& M_x, unsigned int k, unsigned int its, Matri
 
 // -------------- separador de bajo presupuesto --------------
 // Clasificacion
-int kNN(const MatrixXf& X, const RowVectorXf& v, int img_por_sujeto, int k){
+int kNN(const vector< vector< VectorXf> > &clase_de_sujetos, const VectorXf &v, int k){
     // X es la matriz cuyas filas son las muestras de entrenamiento
     // Hay 'cant_sujetos' clases, y para cada una, 'img_por_sujeto' muestras
     // A los elementos X[s*img_por_sujeto..s*img_por_sujeto+img_por_sujeto)
     // los vamos a asignar a la clase 'i'. Queremos ver a que clase pertenece v
 
+    int img_por_sujeto = clase_de_sujetos[0].size();
+
     // Calculo distancias
-    int cant_muestras = X.rows();
+    int cant_muestras = clase_de_sujetos.size() * img_por_sujeto;
     vector<double> distancias(cant_muestras);
-    for (int i = 0; i < cant_muestras; i++) {
-        RowVectorXf temp(X.cols());
-        for (size_t j = 0; j < temp.cols(); j++) {
-            temp(j) = X(i,j) - v(j);
+    int indice = 0;
+    for (size_t i = 0; i < clase_de_sujetos.size(); i++) {
+        for (size_t j = 0; j < clase_de_sujetos[i].size(); j++) {
+            VectorXf temp = clase_de_sujetos[i][j] - v;
+            distancias[indice] = temp.norm();
+            indice++;
         }
-        distancias[i] = temp.norm();
     }
 
     // Me guardo los índices de los k vecinos más cercanos
@@ -116,7 +119,7 @@ int kNN(const MatrixXf& X, const RowVectorXf& v, int img_por_sujeto, int k){
         }
     }
 
-    return max_clase;
+    return max_clase +1;
 }
 
 // -------------- separador de bajo presupuesto --------------
@@ -195,9 +198,9 @@ int main(int argc, char const *argv[]) {
     std::cout << "Pasando imagenes a nuevo espacio...\r" << std::flush;
     MatrixXf Xt = X.transpose();
     // Vector que contiene cada cara de cada sujetos en un vector, ya convertida al nuevo espacio
-
     std::vector< std::vector<VectorXf> > clase_de_sujetos(sujetos.size());
-    MatrixXf PXt = MatrixXf(k, sujetos.size()*img_por_sujeto);
+
+    MatrixXf PXt(k, sujetos.size()*img_por_sujeto);
     PXt = Vt * Xt;
 
     for (size_t i = 0; i < sujetos.size(); i++){
@@ -206,26 +209,14 @@ int main(int argc, char const *argv[]) {
             clase_de_sujetos[i][j] = PXt.col(i*img_por_sujeto+j);
         }
     }
-
-
-    // Testeando: así queda cada imagen de entrenamiento en el nuevo espacio
-    //for (size_t s = 0; s < sujetos.size(); s++) {
-    //std::cout << "Base del sujeto " << s <<":" << '\n';
-    //for (size_t i = 0; i < img_por_sujeto; i++) {
-    //VectorXf x_i(img_alto*img_ancho);
-    //for (size_t j = 0; j < img_alto*img_ancho; j++) {
-    //x_i = X.col(s*sujetos[s].size()+i);
-    //}
-    //std::cout << Vt.transpose()*x_i << '\n' << '\n';
-    //}
-    //}
-    //
+    /*
     for (size_t i = 0; i < sujetos.size(); i++) {
         for (size_t j = 0; j < img_por_sujeto; j++) {
             std::cout << "Sujeto " << i << " | imagen " << j << ":" << std::endl;
             std::cout << clase_de_sujetos[i][j] << std::endl;
         }
     }
+    */
 
     std::cout << "Pasando imagenes a nuevo espacio...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
@@ -234,14 +225,15 @@ int main(int argc, char const *argv[]) {
     int vecinos = 5;
     MatrixXf X_mono = X*V;
     for (size_t i = 0; i < tests.size(); i++) {
-        RowVectorXf v;
+        RowVectorXf vt;
+        VectorXf v;
         const char* ruta = tests[i].path.c_str();
-        get_image(ruta,img_ancho,img_alto,v);
-        v -= media;
-        v /= sqrt((double)(sujetos.size()*img_por_sujeto -1));
-        v = v*V;
-        std::cout << "Imagen convertida: " << v << '\n';
-        int res = kNN(X_mono,v,img_por_sujeto,vecinos);
+        get_image(ruta,img_ancho,img_alto,vt);
+        vt -= media;
+        v = vt.transpose();
+        v = Vt*v;
+        std::cout << "Imagen convertida: " << endl << v << '\n';
+        int res = kNN(clase_de_sujetos,v,vecinos);
         std::cout << "A " << tests[i].respuesta << " se lo identificó como " << res<< '\n';
     }
 
