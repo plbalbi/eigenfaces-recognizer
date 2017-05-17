@@ -172,6 +172,7 @@ int main(int argc, char const *argv[]) {
     MatrixXf Vt = V.transpose();
     std::cout << "Armando TL al espacio copado...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
+
     // imprimo en sujeto las fotitos de los autovectores
     char* base_dir = "sujetos/";
     ofstream autovectores;
@@ -190,7 +191,7 @@ int main(int argc, char const *argv[]) {
         sujeto_en_espacio -= unos;
         sujeto_en_espacio *= 255.0/(sujeto_en_espacio.maxCoeff());
         autovectores << sujeto_en_espacio << '\n';
-        save_image(save_route.c_str(), 92, 112, sujeto_en_espacio);
+        save_image(save_route.c_str(), img_ancho, img_alto, sujeto_en_espacio);
     }
     autovectores.close();
 
