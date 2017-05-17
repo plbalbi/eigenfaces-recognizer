@@ -201,7 +201,7 @@ int main(int argc, char const *argv[]) {
     std::cout << "Armando TL al espacio copado...\r" << std::flush;
     MatrixXd V;
     std::vector<double> autovalores;
-    transfCaracteristica(M_x,k,500,V,autovalores);
+    transfCaracteristica(M_x,k,50,V,autovalores);
     MatrixXd Vt = V.transpose();
 
     ofstream out;
