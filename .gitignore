@@ -11,4 +11,4 @@ src/sujetos/
 *.o
 tp
 *.deps
-src/autovectores.txt
+autovectores.txt
