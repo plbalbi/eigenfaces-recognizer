@@ -50,12 +50,13 @@ void deflacionar(MatrixXf& B, VectorXf& v, float lambda){
     B = B - lambda*v*vt;
 }
 
-void transfCaracteristica(MatrixXf& M_x, unsigned int k, unsigned int its, MatrixXf& V){
+void transfCaracteristica(MatrixXf& M_x, unsigned int k, unsigned int its, MatrixXf& V, vector<float> &autovalores){
     V.resize(M_x.rows(),k);
-
+    autovalores.clear();
     for (size_t i = 0; i < k; i++) {
         VectorXf v = M_x.col(0); // un vector cualquiera
         float lambda = metodoPotencia(M_x,v,its);
+        autovalores.push_back(lambda);
         deflacionar(M_x,v,lambda);
         V.col(i) = v;
     }
@@ -168,8 +169,16 @@ int main(int argc, char const *argv[]) {
     // Busco la transformación característica
     std::cout << "Armando TL al espacio copado...\r" << std::flush;
     MatrixXf V;
-    transfCaracteristica(M_x,k,100,V);
+    std::vector<float> autovalores;
+    transfCaracteristica(M_x,k,500,V,autovalores);
     MatrixXf Vt = V.transpose();
+
+    ofstream out;
+    out.open(out_path);
+    for (size_t i = 0; i < autovalores.size(); i++) {
+        out << sqrt(autovalores[i]) << '\n';
+    }
+    out.close();
     std::cout << "Armando TL al espacio copado...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
 
@@ -225,8 +234,6 @@ int main(int argc, char const *argv[]) {
     // std::cout << clase_de_sujetos[0][0] << '\n';
 
     // Corriendo reconocimiento de caras
-    ofstream out;
-    out.open(out_path);
     std::cout << "############ RECONOCIENDO CARAS ############" << '\n';
     int vecinos = 1;
     MatrixXf X_mono = X*V;
@@ -238,13 +245,10 @@ int main(int argc, char const *argv[]) {
         vt -= media;
         v = vt.transpose();
         v = Vt*v;
-        vt = v.transpose();
-        out << vt << '\n';
         // std::cout << "Imagen convertida: " << endl << v << '\n';
         int res = kNN(clase_de_sujetos,v,vecinos);
         std::cout << "(" + tests[i].path + ") " << tests[i].respuesta << " parece ser " << res<< '\n';
     }
-    out.close();
 
     // testeando metodo potencia
     /*
