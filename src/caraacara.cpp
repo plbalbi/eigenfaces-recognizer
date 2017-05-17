@@ -2,6 +2,7 @@
 #include "tests/unitTesting.hpp"
 #include <vector>
 #include <cfloat>
+#include <ctime>
 
 // -------------- separador de bajo presupuesto --------------
 
@@ -127,6 +128,7 @@ int kNN(const vector< vector< VectorXd> > &clase_de_sujetos, const VectorXd &v, 
 
 
 int main(int argc, char const *argv[]) {
+    time_t start = time(NULL);
 
     // Mostrar help si no hay 1 parametro
     if ((argc == 2) && argv[1] == std::to_string(42)) {
@@ -257,5 +259,7 @@ int main(int argc, char const *argv[]) {
         std::cout << "(" + tests[i].path + ") " << tests[i].respuesta << " parece ser " << res<< '\n';
     }
 
+    time_t end = time(NULL);
+    std::cout << "\n Tiempo de ejecución: ~ "<< end - start << " seg" << '\n';
     return 0;
 }
