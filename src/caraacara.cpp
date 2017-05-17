@@ -134,7 +134,7 @@ int main(int argc, char const *argv[]) {
         test_metodoPotencia2();
         return 0;
     }else
-    if (argc != 3) {
+    if (argc != 3 || argc != 4) {
         show_help();
         return 0;
     }
