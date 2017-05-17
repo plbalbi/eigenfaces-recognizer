@@ -186,12 +186,12 @@ int main(int argc, char const *argv[]) {
 
     MatrixXd V_normalized = V;
     VectorXd mean_vector = media.transpose();
-    save_image("sujetos/media.pgm", 92, 112, media);
+    save_image("sujetos/media.pgm", img_ancho, img_alto, media);
     for (size_t i = 0; i < V_normalized.cols(); i++) {
       V_normalized.col(i) = V_normalized.col(i) /  V_normalized.col(i).norm();
       V_normalized.col(i) = V_normalized.col(i).array().abs()*(255/V_normalized.col(i).maxCoeff());
     }
-    
+
 
     // imprimo en sujeto las fotitos de los autovectores
     char* base_dir = "sujetos/";
