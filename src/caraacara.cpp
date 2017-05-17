@@ -183,13 +183,15 @@ int main(int argc, char const *argv[]) {
     std::cout << "Armando TL al espacio copado...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
     // La matrix X tiene la imagenes de entrenamiento
-    MatrixXf V_normalized = V;
-    VectorXf mean_vector = media.transpose();
+
+    MatrixXd V_normalized = V;
+    VectorXd mean_vector = media.transpose();
     save_image("sujetos/media.pgm", 92, 112, media);
     for (size_t i = 0; i < V_normalized.cols(); i++) {
       V_normalized.col(i) = V_normalized.col(i) /  V_normalized.col(i).norm();
       V_normalized.col(i) = V_normalized.col(i).array().abs()*(255/V_normalized.col(i).maxCoeff());
     }
+    
 
     // imprimo en sujeto las fotitos de los autovectores
     char* base_dir = "sujetos/";
@@ -238,13 +240,9 @@ int main(int argc, char const *argv[]) {
     }
     */
 
-    // std::cout << "Hay " << clase_de_sujetos.size() << " sujetos." << '\n';
-    // std::cout << "Así quedó " << sujetos[0][0] << '\n';
-    // std::cout << clase_de_sujetos[0][0] << '\n';
-
     // Corriendo reconocimiento de caras
     std::cout << "############ RECONOCIENDO CARAS ############" << '\n';
-    int vecinos = 1;
+    int vecinos = 5;
     MatrixXd X_mono = X*V;
     for (size_t i = 0; i < tests.size(); i++) {
         RowVectorXd vt;
@@ -258,20 +256,6 @@ int main(int argc, char const *argv[]) {
         int res = kNN(clase_de_sujetos,v,vecinos);
         std::cout << "(" + tests[i].path + ") " << tests[i].respuesta << " parece ser " << res<< '\n';
     }
-
-    // testeando metodo potencia
-    /*
-    RowVectorXd test_vector = RowVectorXd(img_alto*img_ancho);
-    test_vector = M_x.row(1); // uno random cualquiera
-    int test_eigenValue = metodoPotencia(M_x, test_vector, 10);
-
-    std::cout << "Prueba metodo potencia: " << std::endl;
-    std::cout << test_vector << std::endl;
-    std::cout << test_eigenValue << std::endl;
-    */
-
-
-
 
     return 0;
 }
