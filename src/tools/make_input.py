@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os #listdir, path.join
 import sys # argv
 
@@ -96,4 +97,4 @@ with open(os.path.join('.', 'data.in'), 'w') as data:
     for i in range(0, len(sujetos)):
         test_filename = test_image + ".pgm"
         data.write(os.path.join(rutas[i], test_filename))
-        data.write(str(i+1) + '\n') #clase
+        data.write(' ' + str(i+1) + '\n') #clase

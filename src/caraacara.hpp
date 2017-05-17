@@ -21,6 +21,7 @@ int inline norma2(const RowVectorXd& v){ return sqrt(v.dot(v)); };
 // -------------- separador de bajo presupuesto --------------
 // Clasificacion
 int kNN(const vector< vector< VectorXd> > &clase_de_sujetos, const VectorXd &v, int k);
+int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, const VectorXd &v, int k);
 // inline porque solo sería multiplicar un vector
 // Definirla aca mismo
 void inline reducirEspacio(RowVectorXd& imagen, MatrixXd& TL);

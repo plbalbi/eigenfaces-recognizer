@@ -1,10 +1,10 @@
-../data/ImagenesCarasRed/ 28 23 4 6 15
-s1/ 4 6 1 2 3 8
-s2/ 4 6 1 2 3 8
-s3/ 4 6 1 2 3 8
-s4/ 4 6 1 2 3 8
+../data/ImagenesCarasRed/ 28 23 4 10 15
+s1/ 1 2 3 4 5 6 7 8 9 
+s2/ 1 2 3 4 5 6 7 8 9 
+s3/ 1 2 3 4 5 6 7 8 9 
+s4/ 1 2 3 4 5 6 7 8 9 
 4
-../data/ImagenesCarasRed/s1/5.pgm 1
-../data/ImagenesCarasRed/s2/5.pgm 2
-../data/ImagenesCarasRed/s3/5.pgm 3
-../data/ImagenesCarasRed/s4/5.pgm 4
+../data/ImagenesCarasRed/s1/10.pgm 1
+../data/ImagenesCarasRed/s2/10.pgm 2
+../data/ImagenesCarasRed/s3/10.pgm 3
+../data/ImagenesCarasRed/s4/10.pgm 4

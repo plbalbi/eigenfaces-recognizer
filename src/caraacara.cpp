@@ -5,6 +5,35 @@
 
 // -------------- separador de bajo presupuesto --------------
 
+double inline distancia(const VectorXd &a, const VectorXd &b){
+    VectorXd temp = a - b; return temp.norm();
+};
+
+int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, const VectorXd &v, int k){
+    std::vector< std::pair<int, double> > distances;
+    for (int s = 0; s < clase_de_sujetos.size(); s++) {
+       for (int i = 0; i < clase_de_sujetos[0].size(); i++) {
+           distances.push_back(std::make_pair(s+1, distancia(clase_de_sujetos[s][i], v)));           
+       }
+    }
+    std::sort(distances.begin(), distances.end(), [](std::pair<int, double> a, std::pair<int, double> b){ return a.second < b.second; });
+    std::vector<int> counts(clase_de_sujetos.size() + 1, 0);
+    for (int i = 0; i < k; i++) {
+        counts[distances[i].first]++;
+    }
+    int max_clase;
+    int max_qty = 0;
+    for (int i = 0; i < counts.size(); i++) {
+        if (counts[i] > max_qty) {
+            max_qty = counts[i];
+            max_clase = i;
+        }
+    }
+    return max_clase;
+}
+
+// -------------- separador de bajo presupuesto --------------
+
 // Reduccion de espacio
 
 void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned int img_por_sujeto, vector<sujeto> sujetos, MatrixXd &X, MatrixXd &M_x, RowVectorXd &media){
@@ -253,7 +282,7 @@ int main(int argc, char const *argv[]) {
         v = vt.transpose();
         v = Vt*v;
         // std::cout << "Imagen convertida: " << endl << v << '\n';
-        int res = kNN(clase_de_sujetos,v,vecinos);
+        int res = fast_knn(clase_de_sujetos,v,vecinos);
         std::cout << "(" + tests[i].path + ") " << tests[i].respuesta << " parece ser " << res<< '\n';
     }
 
