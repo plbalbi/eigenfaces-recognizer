@@ -209,6 +209,7 @@ int main(int argc, char const *argv[]) {
             clase_de_sujetos[i][j] = PXt.col(i*img_por_sujeto+j);
         }
     }
+    std::cout << "Pasando imagenes a nuevo espacio...\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
     /*
     for (size_t i = 0; i < sujetos.size(); i++) {
         for (size_t j = 0; j < img_por_sujeto; j++) {
@@ -218,11 +219,13 @@ int main(int argc, char const *argv[]) {
     }
     */
 
-    std::cout << "Pasando imagenes a nuevo espacio...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
+    // std::cout << "Hay " << clase_de_sujetos.size() << " sujetos." << '\n';
+    // std::cout << "Así quedó " << sujetos[0][0] << '\n';
+    // std::cout << clase_de_sujetos[0][0] << '\n';
 
     // Corriendo reconocimiento de caras
-    std::cout << "------- RECONOCIENDO CARAS ------------" << '\n';
-    int vecinos = 5;
+    std::cout << "############ RECONOCIENDO CARAS ############" << '\n';
+    int vecinos = 1;
     MatrixXf X_mono = X*V;
     for (size_t i = 0; i < tests.size(); i++) {
         RowVectorXf vt;
@@ -232,9 +235,9 @@ int main(int argc, char const *argv[]) {
         vt -= media;
         v = vt.transpose();
         v = Vt*v;
-        std::cout << "Imagen convertida: " << endl << v << '\n';
+        // std::cout << "Imagen convertida: " << endl << v << '\n';
         int res = kNN(clase_de_sujetos,v,vecinos);
-        std::cout << "A " << tests[i].respuesta << " se lo identificó como " << res<< '\n';
+        std::cout << "(" + tests[i].path + ") " << tests[i].respuesta << " parece ser " << res<< '\n';
     }
 
     // testeando metodo potencia
