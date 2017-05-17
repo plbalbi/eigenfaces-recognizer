@@ -194,7 +194,7 @@ int main(int argc, char const *argv[]) {
 
 
     // imprimo en sujeto las fotitos de los autovectores
-    char* base_dir = "sujetos/";
+    const char* base_dir = "sujetos/";
     ofstream autovectores;
     autovectores.open("autovectores.txt");
     // autovectores << V*(double)(sujetos.size()*img_por_sujeto -1) << '\n';
