@@ -8,12 +8,12 @@ void test_metodoPotencia(){
     int test_qty = 100;
     for (int i = 0; i < test_qty; i++) {
         std::cout << "TEST " << i << ":\t\t";
-        MatrixXf tempM = MatrixXf::Random(10,10);
-        MatrixXf M_t = tempM.transpose();
-        MatrixXf M = M_t*tempM;
-        VectorXf v = VectorXf::Random(10,1);
+        MatrixXd tempM = MatrixXd::Random(10,10);
+        MatrixXd M_t = tempM.transpose();
+        MatrixXd M = M_t*tempM;
+        VectorXd v = VectorXd::Random(10,1);
         float l = metodoPotencia(M, v, 100);
-        VectorXf r = M*v - l*v;
+        VectorXd r = M*v - l*v;
         // std::cout << '\n' << r.transpose() << '\n';
         if (r.norm() < umbral) {
             std::cout << termcolor::green << "OK" << termcolor::reset << '\n';
@@ -30,14 +30,14 @@ void test_metodoPotencia2(){
     std::cout << "Test método de potencia 2... ";
 
     float umbral;
-    MatrixXf M(2, 2);
-    VectorXf v;
+    MatrixXd M(2, 2);
+    VectorXd v;
     float lambda;
 
     umbral = 0.01;
     M << 1, 5,
          0, 6;
-    v = VectorXf::Random(2 ,1);
+    v = VectorXd::Random(2 ,1);
     lambda = metodoPotencia(M, v, 100);
 
     if (abs(lambda - 6) < umbral) {
@@ -50,7 +50,7 @@ void test_metodoPotencia2(){
 
     deflacionar(M, v, lambda);
 
-    v = VectorXf::Random(2 ,1);
+    v = VectorXd::Random(2 ,1);
     lambda = metodoPotencia(M, v, 100);
 
     if (abs(lambda - 1) < umbral) {
