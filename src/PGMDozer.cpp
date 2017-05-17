@@ -23,10 +23,13 @@ void get_image(const char* image_route, unsigned int ancho, unsigned int alto, R
     string version, comment, maxvalue;
     int ancho_r, alto_r;
     source >> version; // numero mágico: formato de archivo
+    source >> std::ws; // salto espacios
     if (source.peek()=='#') getline(source, comment); // si hay commentario
     source >> ancho_r ; // ancho
+    source >> std::ws; // salto espacios
     if (source.peek()=='#') getline(source, comment); // si hay commentario
     source >> alto_r ; // alto
+    source >> std::ws; // salto espacios
     if (source.peek()=='#') getline(source, comment); // si hay commentario
     getline(source, maxvalue); // maxValue
 
