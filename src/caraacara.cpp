@@ -169,18 +169,27 @@ int main(int argc, char const *argv[]) {
     MatrixXf Vt = V.transpose();
     std::cout << "Armando TL al espacio copado...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
+    // La matrix X tiene la imagenes de entrenamiento
+    MatrixXf V_normalized = V;
+    VectorXf mean_vector = media.transpose();
+    save_image("sujetos/media.pgm", 92, 112, media);
+    for (size_t i = 0; i < V_normalized.cols(); i++) {
+      V_normalized.col(i) = V_normalized.col(i) /  V_normalized.col(i).norm();
+      V_normalized.col(i) = V_normalized.col(i).array().abs()*(255/V_normalized.col(i).maxCoeff());
+    }
+
     // imprimo en sujeto las fotitos de los autovectores
     char* base_dir = "sujetos/";
     ofstream autovectores;
     autovectores.open("autovectores.txt");
-    autovectores << V*(double)(sujetos.size()*img_por_sujeto -1) << '\n';
+    autovectores << V_normalized.transpose() << '\n';
     for (size_t i = 0; i < k; i++) {
       std::string save_route = base_dir;
       save_route += "autovector";
       save_route += "_";
       save_route += std::to_string(i+1);
       save_route += ".pgm";
-      RowVectorXf sujeto_en_espacio = (Vt.row(i))*((double)(sujetos.size()*img_por_sujeto -1))+media;
+      RowVectorXf sujeto_en_espacio = (V_normalized.col(i).transpose());
       save_image(save_route.c_str(), 92, 112, sujeto_en_espacio);
     }
     autovectores.close();
