@@ -12,4 +12,5 @@ src/sujetos/
 tp
 *.deps
 autovectores.txt
-salida.out
+*.out
+*.in
