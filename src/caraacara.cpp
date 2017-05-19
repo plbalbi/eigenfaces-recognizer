@@ -327,7 +327,6 @@ int main(int argc, char const *argv[]) {
 
     // Corriendo reconocimiento de caras
     std::cout << "############ RECONOCIENDO CARAS ############" << '\n';
-    int vecinos = 5;
     MatrixXd X_mono = X*V;
     for (size_t i = 0; i < tests.size(); i++) {
         RowVectorXd vt;
@@ -337,14 +336,32 @@ int main(int argc, char const *argv[]) {
         vt -= media;
         v = vt.transpose();
         v = Vt*v;
-        // std::cout << "Imagen convertida: " << endl << v << '\n';
-        int res = fast_knn(clase_de_sujetos,v,vecinos);
+
+        /*
+        * Las caras de entrenamiento en el nuevo espacio de k dimensiones,
+        están en el vector clase_de_sujetos.
+        * La cara a reconocer en el nuevo espacio de k dimensiones está en 'v'.
+
+        La idea es que cada método guarde su resultado en el struct test,
+        para luego calcular las métricas de todos.
+        */
+
+        int res;
+        // kNN
+        int vecinos = 5;
+        res = fast_knn(clase_de_sujetos,v,vecinos);
+        tests[i].knn = res;
         std::cout << "(" + tests[i].path + ") ";
         if (tests[i].respuesta == res) {
             std::cout << termcolor::green << tests[i].respuesta << " parece ser " << res<< termcolor::reset << '\n';
         }else{
             std::cout << termcolor::red << tests[i].respuesta << " parece ser " << res<< termcolor::reset << '\n';
         }
+
+        // vecino más cercano
+        // TODO
+
+        // otros...
     }
 
     time_t end = time(NULL);
@@ -352,9 +369,9 @@ int main(int argc, char const *argv[]) {
 
     // Sabiendo si algo es una cara o no?
 
-    if (argc == 4) {
+    if (flags.caraOno != NULL) {
 
-        const char* isImage_route = argv[3];
+        const char* isImage_route = flags.caraOno;
         std::cout << isImage_route << std::endl;
         double max_norm = train_recognizer(V_normalized, imgs_por_sujeto);
         RowVectorXd target;

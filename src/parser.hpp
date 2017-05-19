@@ -22,6 +22,11 @@ struct test{
 
     // nro de sujeto al que pertenece la cara
     int respuesta;
+
+    // respuestas que dio cada método
+    int vecino_mas_cercano;
+    int knn;
+    
 };
 
 // un sujeto es una lista de las imágenes (paths) que lo identifican
