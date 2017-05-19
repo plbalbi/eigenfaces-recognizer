@@ -1,9 +1,18 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <string.h>
 #include <vector>
 
 using namespace std;
+
+// este struct indica los flags de la ejecución.
+// si el parámetro es un puntero a NULL, no se activó ese flag.
+// si el parámetro no es un puntero a null, se activó ese flag
+// y de ser necesario se puede leer algo de ese char* (como un path)
+struct flags_t{
+    const char * caraOno; // -c
+};
 
 // Tipos
 struct test{
@@ -21,3 +30,5 @@ typedef vector<string> sujeto ;
 // Declaraciones
 void read_input(const char* input_path, unsigned int &img_ancho, unsigned int &img_alto,
                 unsigned int &k, vector<sujeto> &sujetos, vector<test> &tests);
+
+flags_t get_flags(int argc, char const *argv[]);
