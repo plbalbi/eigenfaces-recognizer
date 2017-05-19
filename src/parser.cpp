@@ -2,6 +2,26 @@
 
 using namespace std;
 
+
+flags_t get_flags(int argc, char const *argv[]){
+    flags_t res;
+    // setear todos en NULL antes de empezar;
+    res.caraOno = NULL;
+
+    for (size_t i = 0; i < argc; i++) {
+        const char* param = argv[i];
+
+        if (strcmp(param, "-c") == 0) {
+            res.caraOno = argv[i+1];
+        }else if(strcmp(param, "-n") == 0){
+            // ...
+        }
+    }
+
+    return res;
+}
+
+
 void read_input(const char* input_path, unsigned int &img_ancho, unsigned int &img_alto, unsigned int &k, vector<sujeto> &sujetos, vector<test> &tests){
 
     ifstream input;

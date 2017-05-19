@@ -175,7 +175,7 @@ double train_recognizer(const MatrixXd& V, const std::vector< std::vector<Vector
     for (int i = 0; i < measuring.size(); i++) {
         if (measuring[i] > max) {
             max = measuring[i];
-        }        
+        }
     }
     return max;
 }
@@ -199,16 +199,19 @@ bool recognize(const MatrixXd &V, const double& umbral, VectorXd& target){
 int main(int argc, char const *argv[]) {
     time_t start = time(NULL);
 
-    // Mostrar help si no hay 1 parametro
     if ((argc == 2) && argv[1] == std::to_string(42)) {
+        // Correr tests si se introdujo el número secreto
         test_metodoPotencia();
         test_metodoPotencia2();
         return 0;
-    }else
-    if (argc != 3 && argc != 4) {
+    }else if (argc < 3) {
+        // Mostrar help si no hay al menos 2 parámetros
         show_help();
         return 0;
     }
+
+    flags_t flags;
+    flags = get_flags(argc, argv);
 
     char const* in_path;
     char const* out_path;
@@ -340,7 +343,7 @@ int main(int argc, char const *argv[]) {
     if (argc == 4) {
         // Me guardo las caras centradas
         std::vector< std::vector<VectorXd> > imgs_por_sujeto(sujetos.size());
-        MatrixXd X_t = X.transpose(); 
+        MatrixXd X_t = X.transpose();
         for (size_t i = 0; i < sujetos.size(); i++){
             imgs_por_sujeto[i] = std::vector<VectorXd>(img_por_sujeto);
             for (size_t j = 0; j < img_por_sujeto; j++){
@@ -355,10 +358,10 @@ int main(int argc, char const *argv[]) {
         target = target - media;
         VectorXd target_t_centered = target.transpose();
         if (recognize(V_normalized, max_norm, target_t_centered)) {
-            std::cout << termcolor::green << "Esto es una CARA!" << termcolor::reset << std::endl;            
+            std::cout << termcolor::green << "Esto es una CARA!" << termcolor::reset << std::endl;
         }else{
             std::cout << termcolor::red << "Esto NO es una CARA... :>(!" << termcolor::reset << std::endl;
-        
+
         }
     }
 
