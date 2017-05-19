@@ -45,7 +45,7 @@ void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned in
         for (size_t i = 0; i < img_por_sujeto; i++) {
             RowVectorXd x_i;
             const char* ruta = sujetos[s][i].c_str();
-            get_image(ruta,img_ancho,img_alto,x_i);
+            get_image(ruta,img_ancho,img_alto,x_i, ruta);
             media = media + x_i;
             X.row(s*sujetos[s].size()+i) = x_i;
         }
@@ -279,7 +279,7 @@ int main(int argc, char const *argv[]) {
         RowVectorXd vt;
         VectorXd v;
         const char* ruta = tests[i].path.c_str();
-        get_image(ruta,img_ancho,img_alto,vt);
+        get_image(ruta,img_ancho,img_alto,vt, ruta);
         vt -= media;
         v = vt.transpose();
         v = Vt*v;

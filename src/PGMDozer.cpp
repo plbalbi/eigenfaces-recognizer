@@ -6,13 +6,13 @@ using namespace Eigen;
 
 // MAtrixxXi <- matrix de tamaño random, con eltos integer
 
-void get_image(const char* image_route, unsigned int ancho, unsigned int alto, RowVectorXd& imagen){
+void get_image(const char* image_route, unsigned int ancho, unsigned int alto, RowVectorXd& imagen,const char* error_msg){
     //Abro el archivo de la imagen
     std::ifstream source(image_route, std::fstream::in);
     if (!source) {
-        std::cerr << "ERROR: Hubo un problema al abrir la imagen" << std::endl;
+        std::cerr << "ERROR: Hubo un problema al abrir la imagen -> " << error_msg << std::endl;
+        std::cerr << "ERROR CODE: " << strerror(errno) << std::endl;
     }
-
     /* DEBUG
     source.seekg(0, ios::end); // set the pointer to the end
     size_t bytes = source.tellg() ; // get the length of the file

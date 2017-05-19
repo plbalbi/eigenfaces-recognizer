@@ -11,6 +11,6 @@ using namespace Eigen;
 
 // typedef Matrix< float , 1, Dynamic > Eigen::RowVectorXf
 // typedef Matrix< double , 1, Dynamic > Eigen::RowVectorXd
-void get_image(const char* image_route, unsigned int ancho, unsigned int alto, RowVectorXd& imagen);
+void get_image(const char* image_route, unsigned int ancho, unsigned int alto, RowVectorXd& imagen,const char* error_msg);
 void save_image(const char* image_route, unsigned int ancho, unsigned int alto, RowVectorXd& imagen);
 void show_help();
