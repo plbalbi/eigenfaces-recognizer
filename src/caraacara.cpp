@@ -161,8 +161,6 @@ double train_recognizer(const MatrixXd& V, const std::vector< std::vector<Vector
     for (int s = 0; s < clase_de_sujetos.size(); s++) {
         for (int i = 0; i < clase_de_sujetos[0].size(); i++) {
             double m;
-            std::cout << "Mutliplicando una matriz de R"<< V_t.rows() << "*" << V_t.cols() << " con un vector de R1*" << clase_de_sujetos[s][i].rows() << std::endl;
-            assert(V_t.cols() == clase_de_sujetos[s][i].rows());
             VectorXd coordinates = V_t*clase_de_sujetos[s][i];
             VectorXd proyection = V*coordinates;
             VectorXd diff = clase_de_sujetos[s][i] - proyection;
@@ -288,6 +286,20 @@ int main(int argc, char const *argv[]) {
 
     std::cout << "Pasando imagenes a nuevo espacio...\r" << std::flush;
     MatrixXd Xt = X.transpose();
+
+
+
+    // Me guardo las caras centradas
+    std::vector< std::vector<VectorXd> > imgs_por_sujeto(sujetos.size());
+    for (size_t i = 0; i < sujetos.size(); i++){
+        imgs_por_sujeto[i] = std::vector<VectorXd>(img_por_sujeto);
+        for (size_t j = 0; j < img_por_sujeto; j++){
+            imgs_por_sujeto[i][j] = Xt.col(i*img_por_sujeto+j);
+        }
+    }
+
+
+
     // Vector que contiene cada cara de cada sujetos en un vector, ya convertida al nuevo espacio
     std::vector< std::vector<VectorXd> > clase_de_sujetos(sujetos.size());
 
@@ -338,17 +350,9 @@ int main(int argc, char const *argv[]) {
     // Sabiendo si algo es una cara o no?
 
     if (argc == 4) {
-        // Me guardo las caras centradas
-        std::vector< std::vector<VectorXd> > imgs_por_sujeto(sujetos.size());
-        MatrixXd X_t = X.transpose(); 
-        for (size_t i = 0; i < sujetos.size(); i++){
-            imgs_por_sujeto[i] = std::vector<VectorXd>(img_por_sujeto);
-            for (size_t j = 0; j < img_por_sujeto; j++){
-                clase_de_sujetos[i][j] = X_t.col(i*img_por_sujeto+j);
-            }
-        }
 
-        const char* isImage_route = argv[4];
+        const char* isImage_route = argv[3];
+        std::cout << isImage_route << std::endl;
         double max_norm = train_recognizer(V_normalized, imgs_por_sujeto);
         RowVectorXd target;
         get_image(isImage_route, img_ancho, img_alto, target, isImage_route);
