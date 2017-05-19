@@ -370,6 +370,12 @@ int main(int argc, char const *argv[]) {
     }
 
 
+    if (flags.vecReducidos != NULL) {
+        const char* salida_v = flags.vecReducidos;
+        std::cout << "Usted activó el flag -v a escribir en " << salida_v << '\n';
+        //TODO
+    }
+
 
     return 0;
 }

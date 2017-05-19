@@ -12,6 +12,7 @@ using namespace std;
 // y de ser necesario se puede leer algo de ese char* (como un path)
 struct flags_t{
     const char * caraOno; // -c
+    const char * vecReducidos; // -v
 };
 
 // Tipos
