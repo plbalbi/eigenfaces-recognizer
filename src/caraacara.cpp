@@ -152,6 +152,46 @@ int kNN(const vector< vector< VectorXd> > &clase_de_sujetos, const VectorXd &v, 
 
     return max_clase +1;
 }
+// -------------- separador de bajo presupuesto --------------
+// CARA O NO?
+double train_recognizer(const MatrixXd& V, const std::vector< std::vector<VectorXd>  > &clase_de_sujetos){
+    std::vector<double> measuring (clase_de_sujetos.size()*clase_de_sujetos[0].size(), 0);
+    MatrixXd V_t = V.transpose();
+    // Lo hago en el vector por si depues decidimos sacar no el maximo, sino otra cosa?
+    for (int s = 0; s < clase_de_sujetos.size(); s++) {
+        for (int i = 0; i < clase_de_sujetos[0].size(); i++) {
+            double m;
+            std::cout << "Mutliplicando una matriz de R"<< V_t.rows() << "*" << V_t.cols() << " con un vector de R1*" << clase_de_sujetos[s][i].rows() << std::endl;
+            assert(V_t.cols() == clase_de_sujetos[s][i].rows());
+            VectorXd coordinates = V_t*clase_de_sujetos[s][i];
+            VectorXd proyection = V*coordinates;
+            VectorXd diff = clase_de_sujetos[s][i] - proyection;
+            m = diff.norm();
+            measuring[s*clase_de_sujetos[0].size()+i] = m;
+        }
+    }
+    // Get max
+    double max = 0;
+    for (int i = 0; i < measuring.size(); i++) {
+        if (measuring[i] > max) {
+            max = measuring[i];
+        }        
+    }
+    return max;
+}
+
+
+bool recognize(const MatrixXd &V, const double& umbral, VectorXd& target){
+    MatrixXd V_t = V.transpose();
+    double m = 0;
+    VectorXd coordinates = V_t*target;
+    VectorXd proyection = V*coordinates;
+    VectorXd diff =target - proyection;
+    m = diff.norm();
+    return m <= umbral;
+
+}
+
 
 // -------------- separador de bajo presupuesto --------------
 
@@ -216,11 +256,10 @@ int main(int argc, char const *argv[]) {
     // La matrix X tiene la imagenes de entrenamiento
 
     MatrixXd V_normalized = V;
-    VectorXd mean_vector = media.transpose();
     save_image("sujetos/media.pgm", img_ancho, img_alto, media);
     for (size_t i = 0; i < V_normalized.cols(); i++) {
       V_normalized.col(i) = V_normalized.col(i) /  V_normalized.col(i).norm();
-      V_normalized.col(i) = V_normalized.col(i).array().abs()*(255/V_normalized.col(i).maxCoeff());
+      //V_normalized.col(i) = V_normalized.col(i).array().abs()*(255/V_normalized.col(i).maxCoeff());
     }
 
 
@@ -295,5 +334,35 @@ int main(int argc, char const *argv[]) {
 
     time_t end = time(NULL);
     std::cout << "\n Tiempo de ejecución: ~ "<< end - start << " seg" << '\n';
+
+    // Sabiendo si algo es una cara o no?
+
+    if (argc == 4) {
+        // Me guardo las caras centradas
+        std::vector< std::vector<VectorXd> > imgs_por_sujeto(sujetos.size());
+        MatrixXd X_t = X.transpose(); 
+        for (size_t i = 0; i < sujetos.size(); i++){
+            imgs_por_sujeto[i] = std::vector<VectorXd>(img_por_sujeto);
+            for (size_t j = 0; j < img_por_sujeto; j++){
+                clase_de_sujetos[i][j] = X_t.col(i*img_por_sujeto+j);
+            }
+        }
+
+        const char* isImage_route = argv[4];
+        double max_norm = train_recognizer(V_normalized, imgs_por_sujeto);
+        RowVectorXd target;
+        get_image(isImage_route, img_ancho, img_alto, target, isImage_route);
+        target = target - media;
+        VectorXd target_t_centered = target.transpose();
+        if (recognize(V_normalized, max_norm, target_t_centered)) {
+            std::cout << termcolor::green << "Esto es una CARA!" << termcolor::reset << std::endl;            
+        }else{
+            std::cout << termcolor::red << "Esto NO es una CARA... :>(!" << termcolor::reset << std::endl;
+        
+        }
+    }
+
+
+
     return 0;
 }

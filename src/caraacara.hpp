@@ -22,6 +22,11 @@ int inline norma2(const RowVectorXd& v){ return sqrt(v.dot(v)); };
 // Clasificacion
 int kNN(const vector< vector< VectorXd> > &clase_de_sujetos, const VectorXd &v, int k);
 int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, const VectorXd &v, int k);
+// -------------- separador de bajo presupuesto --------------
+// coso que dice si algo es cara o no?
+double train_recognizer(const MatrixXd& V, const std::vector< std::vector<VectorXd>  > &clase_de_sujetos);
+bool recognize(const MatrixXd &V, const double& umbral, VectorXd& target);
+// -------------- separador de bajo presupuesto --------------
 // inline porque solo sería multiplicar un vector
 // Definirla aca mismo
 void inline reducirEspacio(RowVectorXd& imagen, MatrixXd& TL);
