@@ -371,9 +371,22 @@ int main(int argc, char const *argv[]) {
 
 
     if (flags.vecReducidos != NULL) {
+        /*
+        Este flag indica que se guarden en un archivo los vectores
+        de las imágenes de entrenamiento reducidas al espacio
+        de k dimensiones con PCA.
+        */
         const char* salida_v = flags.vecReducidos;
-        std::cout << "Usted activó el flag -v a escribir en " << salida_v << '\n';
-        //TODO
+        ofstream vectores;
+        vectores.open(salida_v);
+
+        for (size_t i = 0; i < clase_de_sujetos.size(); i++) {
+            for (size_t j = 0; j < clase_de_sujetos[i].size(); j++) {
+                vectores << i+1 << '\t' << clase_de_sujetos[i][j].transpose() << '\n';
+            }
+        }
+
+        vectores.close();
     }
 
 
