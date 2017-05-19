@@ -352,13 +352,11 @@ int main(int argc, char const *argv[]) {
 
     // Sabiendo si algo es una cara o no?
 
-    if (argc == 4) {
+    if (flags.caraOno != NULL) {
 
-        const char* isImage_route = argv[3];
-        std::cout << isImage_route << std::endl;
-        double max_norm = train_recognizer(V_normalized, imgs_por_sujeto);
+        double max_norm = 2*train_recognizer(V_normalized, imgs_por_sujeto);
         RowVectorXd target;
-        get_image(isImage_route, img_ancho, img_alto, target, isImage_route);
+        get_image(flags.caraOno, img_ancho, img_alto, target, flags.caraOno);
         target = target - media;
         VectorXd target_t_centered = target.transpose();
         if (recognize(V_normalized, max_norm, target_t_centered)) {
