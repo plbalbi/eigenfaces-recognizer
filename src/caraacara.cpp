@@ -336,9 +336,10 @@ int main(int argc, char const *argv[]) {
         */
 
         int res;
+        int vecinos;
 
         // kNN
-        int vecinos = 5;
+        vecinos = 5;
         res = fast_knn(clase_de_sujetos,v,vecinos);
         tests[i].knn = res;
         std::cout << "(" + tests[i].path + ") ";
@@ -347,11 +348,17 @@ int main(int argc, char const *argv[]) {
         }else{
             std::cout << termcolor::red << tests[i].respuesta << " parece ser " << res<< termcolor::reset << '\n';
         }
+        std::cout << "\n";
 
         // vecino más cercano
-        // TODO
+        vecinos = 1;
+        res = fast_knn(clase_de_sujetos,v,vecinos);
+        tests[i].vecino_mas_cercano = res;
 
-        // otros...
+        // weighted knn
+        vecinos = 5;
+        res = weighted_knn(clase_de_sujetos,v,vecinos);
+        tests[i].weighted_knn = res;
     }
 
     // Métricas

@@ -27,6 +27,7 @@ struct test{
     // respuestas que dio cada método
     int vecino_mas_cercano;
     int knn;
+    int weighted_knn;
 
 };
 
