@@ -33,6 +33,30 @@ int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, cons
     return max_clase;
 }
 
+int weighted_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, const VectorXd &v, int k){
+    std::vector< std::pair<int, double> > distances;
+    for (int s = 0; s < clase_de_sujetos.size(); s++) {
+       for (int i = 0; i < clase_de_sujetos[0].size(); i++) {
+           distances.push_back(std::make_pair(s+1, distancia(clase_de_sujetos[s][i], v)));
+       }
+    }
+    std::sort(distances.begin(), distances.end(), [](std::pair<int, double> a, std::pair<int, double> b){ return a.second < b.second; });
+    double max_k = distances[k-1].second; // Distancia más lejana de los k más cercanos
+    std::vector<double> counts(clase_de_sujetos.size() + 1, 0);
+    for (int i = 0; i < k; i++) {
+        counts[distances[i].first] += (max_k - distances[i].second);
+    }
+    int max_clase;
+    double max_qty = 0;
+    for (int i = 0; i < counts.size(); i++) {
+        if (counts[i] > max_qty) {
+            max_qty = counts[i];
+            max_clase = i;
+        }
+    }
+    return max_clase;
+}
+
 // -------------- separador de bajo presupuesto --------------
 
 // Reduccion de espacio
