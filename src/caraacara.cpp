@@ -263,33 +263,8 @@ int main(int argc, char const *argv[]) {
       //V_normalized.col(i) = V_normalized.col(i).array().abs()*(255/V_normalized.col(i).maxCoeff());
     }
 
-
-    // imprimo en sujeto las fotitos de los autovectores
-    const char* base_dir = "sujetos/";
-    ofstream autovectores;
-    autovectores.open("autovectores.txt");
-    // autovectores << V*(double)(sujetos.size()*img_por_sujeto -1) << '\n';
-    for (size_t i = 0; i < k; i++) {
-        std::string save_route = base_dir;
-        save_route += "autovector";
-        save_route += "_";
-        save_route += std::to_string(i+1);
-        save_route += ".pgm";
-        RowVectorXd sujeto_en_espacio = Vt.row(i);
-        RowVectorXd unos(img_alto*img_ancho);
-        unos.setOnes();
-        unos *= sujeto_en_espacio.minCoeff();
-        sujeto_en_espacio -= unos;
-        sujeto_en_espacio *= 255.0/(sujeto_en_espacio.maxCoeff());
-        autovectores << sujeto_en_espacio << '\n';
-        save_image(save_route.c_str(), img_ancho, img_alto, sujeto_en_espacio);
-    }
-    autovectores.close();
-
-
     std::cout << "Pasando imagenes a nuevo espacio...\r" << std::flush;
     MatrixXd Xt = X.transpose();
-
 
 
     // Me guardo las caras centradas
@@ -300,8 +275,6 @@ int main(int argc, char const *argv[]) {
             imgs_por_sujeto[i][j] = Xt.col(i*img_por_sujeto+j);
         }
     }
-
-
 
     // Vector que contiene cada cara de cada sujetos en un vector, ya convertida al nuevo espacio
     std::vector< std::vector<VectorXd> > clase_de_sujetos(sujetos.size());
@@ -316,14 +289,6 @@ int main(int argc, char const *argv[]) {
         }
     }
     std::cout << "Pasando imagenes a nuevo espacio...\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
-    /*
-    for (size_t i = 0; i < sujetos.size(); i++) {
-        for (size_t j = 0; j < img_por_sujeto; j++) {
-            std::cout << "Sujeto " << i << " | imagen " << j << ":" << std::endl;
-            std::cout << clase_de_sujetos[i][j] << std::endl;
-        }
-    }
-    */
 
     // Corriendo reconocimiento de caras
     std::cout << "############ RECONOCIENDO CARAS ############" << '\n';
@@ -347,6 +312,7 @@ int main(int argc, char const *argv[]) {
         */
 
         int res;
+
         // kNN
         int vecinos = 5;
         res = fast_knn(clase_de_sujetos,v,vecinos);
@@ -364,13 +330,23 @@ int main(int argc, char const *argv[]) {
         // otros...
     }
 
+    // Métricas
+    // TODO
+
+
     time_t end = time(NULL);
     std::cout << "\n Tiempo de ejecución: ~ "<< end - start << " seg" << '\n';
 
-    // Sabiendo si algo es una cara o no?
+
+
+    // A partir de acá comienzan a ejecutarse los flags que agregan cosas.
 
     if (flags.caraOno != NULL) {
-
+        /*
+        "-c"
+        Este flag indica que se intente adivinar si la imagen
+        pasada como parámetro es una cara o no.
+        */
         const char* isImage_route = flags.caraOno;
         std::cout << isImage_route << std::endl;
         double max_norm = train_recognizer(V_normalized, imgs_por_sujeto);
@@ -389,6 +365,7 @@ int main(int argc, char const *argv[]) {
 
     if (flags.vecReducidos != NULL) {
         /*
+        "-v"
         Este flag indica que se guarden en un archivo los vectores
         de las imágenes de entrenamiento reducidas al espacio
         de k dimensiones con PCA.
@@ -406,6 +383,42 @@ int main(int argc, char const *argv[]) {
         vectores.close();
     }
 
+
+    if (flags.autocaras != NULL) {
+        /*
+        "-a"
+        Este flag indica que se guarden las autocaras en sujetos/*.pgm.
+        */
+        const char* base_dir = "sujetos/";
+
+        // verificar de una manera poco convencional que exista el directorio sujetos/
+        string prueba(base_dir);
+        prueba+= "cualEsLaProbabilidadDeQueHayaUnArchivoConEsteNombre";
+        std::fstream existe(prueba , std::fstream::out);
+        if (!existe) {cerr << "ERROR: no existe el directorio sujetos/" << endl;
+        }else{
+            remove(prueba.c_str());
+            // ofstream autovectores;
+            // autovectores.open("autovectores.txt");
+            for (size_t i = 0; i < k; i++) {
+                std::string save_route = base_dir;
+                save_route += "autovector";
+                save_route += "_";
+                save_route += std::to_string(i+1);
+                save_route += ".pgm";
+                RowVectorXd sujeto_en_espacio = Vt.row(i);
+                RowVectorXd unos(img_alto*img_ancho);
+                unos.setOnes();
+                unos *= sujeto_en_espacio.minCoeff();
+                sujeto_en_espacio -= unos;
+                sujeto_en_espacio *= 255.0/(sujeto_en_espacio.maxCoeff());
+                // autovectores << sujeto_en_espacio << '\n';
+                save_image(save_route.c_str(), img_ancho, img_alto, sujeto_en_espacio);
+            }
+            // autovectores.close();
+        }
+        existe.close();
+    }
 
     return 0;
 }

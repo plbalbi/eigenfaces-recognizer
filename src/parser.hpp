@@ -13,6 +13,7 @@ using namespace std;
 struct flags_t{
     const char * caraOno; // -c
     const char * vecReducidos; // -v
+    const char * autocaras; // -a
 };
 
 // Tipos
@@ -26,7 +27,7 @@ struct test{
     // respuestas que dio cada método
     int vecino_mas_cercano;
     int knn;
-    
+
 };
 
 // un sujeto es una lista de las imágenes (paths) que lo identifican
