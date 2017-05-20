@@ -1,6 +1,7 @@
 #include "caraacara.hpp"
 #include "tests/unitTesting.hpp"
 #include <vector>
+#include <string>
 #include <cfloat>
 #include <ctime>
 
@@ -91,11 +92,25 @@ int main(int argc, char const *argv[]) {
     std::cout << "############ RECONOCIENDO CARAS ############" << '\n';
     MatrixXd X_mono = X*V;
 
-    // Clasificación
     int classification_methods = 3; 
-    vector< vector<int> > res(classification_methods, vector<int>(tests.size()));
     for (size_t c = 0; c < classification_methods; c++){
+
+        string method_name;
+        if (c == 0) {
+            method_name = "KNN";
+        } else if (c == 1) {
+            method_name = "VECINO";
+        } else if (c == 2) {
+            method_name = "WEIGHTED";
+        }
+        std::cout << method_name << "####\n"; 
+
+        vector<int> res(tests.size());
+        vector< vector<int> > confusion(sujetos.size(), vector<int>(sujetos.size()));
+        //  en la posición (i,j) está la cantidad de i's clasificados como j's,
+        //  las filas son las clases reales y las columnas son las predicciones
         for (size_t i = 0; i < tests.size(); i++) {
+            // Clasificación
             RowVectorXd vt;
             VectorXd v;
             const char* ruta = tests[i].path.c_str();
@@ -105,46 +120,87 @@ int main(int argc, char const *argv[]) {
             v = Vt*v;
 
             if (c == 0) {
-                res[c][i] = fast_knn(clase_de_sujetos,v,5); //knn
+                res[i] = fast_knn(clase_de_sujetos,v,5);
             } else if (c == 1) {
-                res[c][i] = fast_knn(clase_de_sujetos,v,1); //vecino más cercano
+                res[i] = fast_knn(clase_de_sujetos,v,1);
             } else if (c == 2) {
-                res[c][i] = weighted_knn(clase_de_sujetos,v,5); //weighted knn
+                res[i] = weighted_knn(clase_de_sujetos,v,5);
             }
-        }
-    }
 
-    // Resultados
-    for (size_t c = 0; c < classification_methods; c++){
-        if (c == 0) {
-            std::cout << "KNN ####\n"; //knn
-        } else if (c == 1) {
-            std::cout << "VECINO MÁS CERCANO####\n"; //vecino más cercano
-        } else if (c == 2) {
-            std::cout << "WEIGHTED KNN ####\n"; //weighted knn
-        }
-        
-        for (size_t i = 0; i < tests.size(); i++) {
+            // Resultados
+            confusion[tests[i].respuesta-1][res[i]-1]++;
             std::cout << "(" + tests[i].path + ") ";
-            if (tests[i].respuesta == res[c][i]) {
-                std::cout << termcolor::green << tests[i].respuesta << " parece ser " << res[c][i] << termcolor::reset << '\n';
+            if (tests[i].respuesta == res[i]) {
+                std::cout << termcolor::green << tests[i].respuesta << " parece ser " << res[i] << termcolor::reset << '\n';
             }else{
-                std::cout << termcolor::red << tests[i].respuesta << " parece ser " << res[c][i] << termcolor::reset << '\n';
+                std::cout << termcolor::red << tests[i].respuesta << " parece ser " << res[i] << termcolor::reset << '\n';
             }
         }
-    }
 
-    // Métricas
-    vector< vector<int> > accuracy(classification_methods, vector<int>(sujetos.size()));
-    vector< vector<int> > recall(classification_methods, vector<int>(sujetos.size()));
-    vector< vector<int> > f1(classification_methods, vector<int>(sujetos.size()));
-    for (size_t c = 0; c < classification_methods; c++){
+        printf("YEIAHZZZ");
+
+        vector<float> accuracy(sujetos.size());
+        string accuracy_path = "./metricas/";
+        accuracy_path += method_name;
+        accuracy_path += "_accuracy.out";
+        ofstream accuracy_file;
+        accuracy_file.open(accuracy_path);
+        
+        vector<float> recall(sujetos.size());
+        string recall_path = "./metricas/";
+        recall_path += method_name;
+        recall_path += "_recall.out";
+        ofstream recall_file;
+        recall_file.open(recall_path);
+
+        vector<float> f1(sujetos.size());
+        string f1_path = "./metricas/";
+        f1_path += method_name;
+        f1_path += "_f1.out";
+        ofstream f1_file;
+        f1_file.open(f1_path);
+
         for (size_t s = 0; s < sujetos.size(); s++) {
-            //accuracy...
-            //recall...
-            //f1...
+             // Precálculos
+            int verdaderos_positivos = confusion[s][s];
+            int falsos_negativos = 0;
+            for (size_t i = 0; i < sujetos.size(); i++) {
+                if (i != s) falsos_negativos += confusion[s][i];
+            }
+            int falsos_positivos = 0;
+            for (size_t i = 0; i < sujetos.size(); i++) {
+                if (i != s) falsos_positivos += confusion[i][s];
+            }
+
+            // Metriques
+            if (verdaderos_positivos + falsos_positivos != 0) {
+                accuracy[s] = (float)verdaderos_positivos / ((float)verdaderos_positivos + (float)falsos_positivos);
+            } else {
+                accuracy[s] = 0;
+            }
+            if (verdaderos_positivos + falsos_positivos != 0) {
+                recall[s] = (float)verdaderos_positivos / ((float)verdaderos_positivos + (float)falsos_negativos);
+            } else {
+                recall[s] = 0;
+            }
+            if (accuracy[s] + recall[s] != 0) { 
+                f1[s] = 2 * accuracy[s] * recall[s] / (accuracy[s] + recall[s]);
+            } else {
+                f1[s] = 0;
+            }
+
+            // Guardar
+            accuracy_file << s+1 << " " << accuracy[s] << "\n";
+            recall_file << s+1 << " " << recall[s] << "\n";
+            f1_file << s+1 << " " << f1[s] << "\n";
         }
+        accuracy_file.close();
+        recall_file.close();
+        f1_file.close();
+
+        printf("\n");
     }
+ 
 
     time_t end = time(NULL);
     std::cout << "\n Tiempo de ejecución: ~ "<< end - start << " seg" << '\n';
