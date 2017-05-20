@@ -7,14 +7,18 @@ flags_t get_flags(int argc, char const *argv[]){
     flags_t res;
     // setear todos en NULL antes de empezar;
     res.caraOno = NULL;
+    res.vecReducidos = NULL;
+    res.autocaras = NULL;
 
-    for (size_t i = 0; i < argc; i++) {
+    for (int i = 0; i < argc; i++) {
         const char* param = argv[i];
 
         if (strcmp(param, "-c") == 0) {
             res.caraOno = argv[i+1];
-        }else if(strcmp(param, "-n") == 0){
-            // ...
+        }else if(strcmp(param, "-v") == 0){
+            res.vecReducidos = argv[i+1];
+        }else if(strcmp(param, "-a") == 0){
+            res.autocaras = "Blah"; // no requiere nada
         }
     }
 

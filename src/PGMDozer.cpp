@@ -82,14 +82,16 @@ void show_help(){
     caras_art += "    \\__\\/        \\__\\/        \\__\\/        \\__\\/        \\__\\/         \n\n";
     std::string message = "Uso de este super reconocedor de caras (no la revista):\n";
     message += "\n";
-    message += "./tp <ruta al archivo de config> <ruta al archivo de salida> <flags>\n";
+    message += "./tp <ruta-config> <ruta-salida> <flags>\n";
     message += "\n";
-    message += "El campo flags puede ser alguno/s de los siguientes: \n";
-    message += "\t -c <ruta a imagen> (determinar si la imagen de la ruta es o no una cara) \n";
+    message += "El campo <flags> puede ser alguno/s de los siguientes: \n";
+    message += "\t -c <ruta-imagen> (determinar si la imagen de la ruta es o no una cara) \n";
+    message += "\t -v <ruta-salida> (guardar vectores de entrenamiento reducidos con PCA) \n";
+    message += "\t -a  (guardar en sujetos/ las autocaras en .pgm) \n";
     message += "Salu2\n";
     std::cout << termcolor::red << caras_art << termcolor::reset ;
     std::cout << termcolor::bold << termcolor::red << "\t\t\tRECOGNIZER\n\n" << termcolor:: reset << std::endl;
-    std::cout << termcolor::blue << message << std::endl;
+    std::cout << termcolor::yellow << message << std::endl;
 }
 
 // TESING
