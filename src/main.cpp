@@ -46,8 +46,10 @@ int main(int argc, char const *argv[]) {
     cargar_datos(img_alto, img_ancho, sujetos, X, media);
     MatrixXd V;
     std::vector<double> autovalores;
-    // transfCaracteristica_v2(X, k, 500, V, autovalores);
-    transfCaracteristica_v1(X, k, 50, V, autovalores);
+
+    transfCaracteristica_v2(X, k, 500, V, autovalores); //calcula los autovectores con la matriz X*Xt
+    // transfCaracteristica_v1(X, k, 500, V, autovalores); //calcula los autovectores con la matriz Xt*X
+    
     MatrixXd Vt = V.transpose();
     std::cout << "Armando TL al espacio copado...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
