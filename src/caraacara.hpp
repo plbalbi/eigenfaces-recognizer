@@ -22,7 +22,6 @@ void cargar_datos(unsigned int img_alto, unsigned int img_ancho, vector<sujeto> 
 
 void transfCaracteristica_v1(MatrixXd& X, unsigned int k, unsigned int its, MatrixXd& V, vector<double> &autovalores);
 void transfCaracteristica_v2(MatrixXd& X, unsigned int k, unsigned int its, MatrixXd& V, vector<double> &autovalores);
-void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned int img_por_sujeto, vector<sujeto> sujetos, MatrixXd &X, MatrixXd &M_x, RowVectorXd &media);
 double inline distancia(const VectorXd &a, const VectorXd &b){VectorXd temp = a - b; return temp.norm();};
 // -------------- separador de bajo presupuesto --------------
 // Clasificacion
