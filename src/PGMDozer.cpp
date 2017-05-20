@@ -10,8 +10,10 @@ void get_image(const char* image_route, unsigned int ancho, unsigned int alto, R
     //Abro el archivo de la imagen
     std::ifstream source(image_route, std::fstream::in);
     if (!source) {
-        std::cerr << "ERROR: Hubo un problema al abrir la imagen -> " << error_msg << std::endl;
+        errno = 1;
+        std::cerr << "ERROR: Hubo un problema al abrir la imagen '" << error_msg << "'"<< std::endl;
         std::cerr << "ERROR CODE: " << strerror(errno) << std::endl;
+        exit(errno);
     }
     /* DEBUG
     source.seekg(0, ios::end); // set the pointer to the end
@@ -21,7 +23,7 @@ void get_image(const char* image_route, unsigned int ancho, unsigned int alto, R
 
     //La imagen ya fue abierta aca
     string version, comment, maxvalue;
-    int ancho_r, alto_r;
+    unsigned int ancho_r, alto_r;
     source >> version; // numero mágico: formato de archivo
     source >> std::ws; // salto espacios
     if (source.peek()=='#') getline(source, comment); // si hay commentario
@@ -29,6 +31,10 @@ void get_image(const char* image_route, unsigned int ancho, unsigned int alto, R
     source >> std::ws; // salto espacios
     if (source.peek()=='#') getline(source, comment); // si hay commentario
     source >> alto_r ; // alto
+    if (ancho_r != ancho || alto_r != alto) {
+        std::cerr << "ERROR: la imagen '" << error_msg << "' no mide "<<ancho<<"x"<<alto << std::endl;
+        exit(3);
+    }
     source >> std::ws; // salto espacios
     if (source.peek()=='#') getline(source, comment); // si hay commentario
     getline(source, maxvalue); // maxValue
@@ -54,7 +60,9 @@ void get_image(const char* image_route, unsigned int ancho, unsigned int alto, R
 void save_image(const char* image_route, unsigned int ancho, unsigned int alto, RowVectorXd& imagen){
     std::fstream stream(image_route, std::fstream::out);
     if (!stream) {
-        std::cerr << "ERROR: Hubo un problema al abrir la imagen" << std::endl;
+        std::cerr << "ERROR: Hubo un problema al guardar la imagen" << std::endl;
+        std::cerr << "ERROR CODE: " << strerror(errno) << std::endl;
+        exit(errno);
     }
     stream << "P5" << std::endl;
     stream << "# Hecha por el grupo de tp mas copado" << std::endl;
