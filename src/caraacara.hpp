@@ -18,8 +18,10 @@
 double metodoPotencia(const MatrixXd& B, VectorXd& v, int iteraciones);
 void deflacionar(MatrixXd& B, VectorXd& v, double lambda);
 
-void transfCaracteristica(MatrixXd& M_x, unsigned int k, unsigned int its, MatrixXd& V, vector<double> &autovalores);
-void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned int img_por_sujeto, vector<sujeto> sujetos, MatrixXd &X, MatrixXd &M_x, RowVectorXd &media);
+void cargar_datos(unsigned int img_alto, unsigned int img_ancho, vector<sujeto> sujetos, MatrixXd &X, RowVectorXd &media);
+
+void transfCaracteristica_v1(MatrixXd& X, unsigned int k, unsigned int its, MatrixXd& V, vector<double> &autovalores);
+void transfCaracteristica_v2(MatrixXd& X, unsigned int k, unsigned int its, MatrixXd& V, vector<double> &autovalores);
 double inline distancia(const VectorXd &a, const VectorXd &b){VectorXd temp = a - b; return temp.norm();};
 // -------------- separador de bajo presupuesto --------------
 // Clasificacion

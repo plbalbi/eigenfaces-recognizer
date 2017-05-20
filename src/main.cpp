@@ -40,21 +40,18 @@ int main(int argc, char const *argv[]) {
     if (sujetos.size()>0) img_por_sujeto = sujetos[0].size();
 
 
-    // Calculo la matriz de covarianza
-    std::cout << "Armando matriz de covarianza...\r" << std::flush;
-    MatrixXd X;
-    MatrixXd M_x;
-    RowVectorXd media;
-    matrizCovarianza(img_alto, img_ancho, img_por_sujeto, sujetos, X, M_x, media);
-    std::cout << "Armando matriz de covarianza...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
-
-
-    // Busco la transformación característica
     std::cout << "Armando TL al espacio copado...\r" << std::flush;
+    MatrixXd X;
+    RowVectorXd media;
+    cargar_datos(img_alto, img_ancho, sujetos, X, media);
     MatrixXd V;
     std::vector<double> autovalores;
-    transfCaracteristica(M_x,k,50,V,autovalores);
+
+    transfCaracteristica_v2(X, k, 500, V, autovalores); //calcula los autovectores con la matriz X*Xt
+    // transfCaracteristica_v1(X, k, 500, V, autovalores); //calcula los autovectores con la matriz Xt*X
+    
     MatrixXd Vt = V.transpose();
+    std::cout << "Armando TL al espacio copado...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
     ofstream out;
     out.open(out_path);
@@ -63,7 +60,6 @@ int main(int argc, char const *argv[]) {
         out << sqrt(autovalores[i]) << '\n';
     }
     out.close();
-    std::cout << "Armando TL al espacio copado...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
     // La matrix X tiene la imagenes de entrenamiento
 
