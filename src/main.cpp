@@ -94,53 +94,61 @@ int main(int argc, char const *argv[]) {
     // Corriendo reconocimiento de caras
     std::cout << "############ RECONOCIENDO CARAS ############" << '\n';
     MatrixXd X_mono = X*V;
-    for (size_t i = 0; i < tests.size(); i++) {
-        RowVectorXd vt;
-        VectorXd v;
-        const char* ruta = tests[i].path.c_str();
-        get_image(ruta,img_ancho,img_alto,vt, ruta);
-        vt -= media;
-        v = vt.transpose();
-        v = Vt*v;
 
-        /*
-        * Las caras de entrenamiento en el nuevo espacio de k dimensiones,
-        están en el vector clase_de_sujetos.
-        * La cara a reconocer en el nuevo espacio de k dimensiones está en 'v'.
+    // Clasificación
+    int classification_methods = 3; 
+    vector< vector<int> > res(classification_methods, vector<int>(tests.size()));
+    for (size_t c = 0; c < classification_methods; c++){
+        for (size_t i = 0; i < tests.size(); i++) {
+            RowVectorXd vt;
+            VectorXd v;
+            const char* ruta = tests[i].path.c_str();
+            get_image(ruta,img_ancho,img_alto,vt, ruta);
+            vt -= media;
+            v = vt.transpose();
+            v = Vt*v;
 
-        La idea es que cada método guarde su resultado en el struct test,
-        para luego calcular las métricas de todos.
-        */
-
-        int res;
-        int vecinos;
-
-        // kNN
-        vecinos = 5;
-        res = fast_knn(clase_de_sujetos,v,vecinos);
-        tests[i].knn = res;
-        std::cout << "(" + tests[i].path + ") ";
-        if (tests[i].respuesta == res) {
-            std::cout << termcolor::green << tests[i].respuesta << " parece ser " << res<< termcolor::reset << '\n';
-        }else{
-            std::cout << termcolor::red << tests[i].respuesta << " parece ser " << res<< termcolor::reset << '\n';
+            if (c == 0) {
+                res[c][i] = fast_knn(clase_de_sujetos,v,5); //knn
+            } else if (c == 1) {
+                res[c][i] = fast_knn(clase_de_sujetos,v,1); //vecino más cercano
+            } else if (c == 2) {
+                res[c][i] = weighted_knn(clase_de_sujetos,v,5); //weighted knn
+            }
         }
-        std::cout << "\n";
+    }
 
-        // vecino más cercano
-        vecinos = 1;
-        res = fast_knn(clase_de_sujetos,v,vecinos);
-        tests[i].vecino_mas_cercano = res;
-
-        // weighted knn
-        vecinos = 5;
-        res = weighted_knn(clase_de_sujetos,v,vecinos);
-        tests[i].weighted_knn = res;
+    // Resultados
+    for (size_t c = 0; c < classification_methods; c++){
+        if (c == 0) {
+            std::cout << "KNN ####\n"; //knn
+        } else if (c == 1) {
+            std::cout << "VECINO MÁS CERCANO####\n"; //vecino más cercano
+        } else if (c == 2) {
+            std::cout << "WEIGHTED KNN ####\n"; //weighted knn
+        }
+        
+        for (size_t i = 0; i < tests.size(); i++) {
+            std::cout << "(" + tests[i].path + ") ";
+            if (tests[i].respuesta == res[c][i]) {
+                std::cout << termcolor::green << tests[i].respuesta << " parece ser " << res[c][i] << termcolor::reset << '\n';
+            }else{
+                std::cout << termcolor::red << tests[i].respuesta << " parece ser " << res[c][i] << termcolor::reset << '\n';
+            }
+        }
     }
 
     // Métricas
-    // TODO
-
+    vector< vector<int> > accuracy(classification_methods, vector<int>(sujetos.size()));
+    vector< vector<int> > recall(classification_methods, vector<int>(sujetos.size()));
+    vector< vector<int> > f1(classification_methods, vector<int>(sujetos.size()));
+    for (size_t c = 0; c < classification_methods; c++){
+        for (size_t s = 0; s < sujetos.size(); s++) {
+            //accuracy...
+            //recall...
+            //f1...
+        }
+    }
 
     time_t end = time(NULL);
     std::cout << "\n Tiempo de ejecución: ~ "<< end - start << " seg" << '\n';
