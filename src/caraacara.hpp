@@ -17,11 +17,10 @@
 
 double metodoPotencia(const MatrixXd& B, VectorXd& v, int iteraciones);
 void deflacionar(MatrixXd& B, VectorXd& v, double lambda);
-void transfCaracteristica(MatrixXd& M_x, unsigned int k, unsigned int its, MatrixXd& V, vector<double> &autovalores);
-int inline norma2(const RowVectorXd& v){ return sqrt(v.dot(v)); };
-void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned int img_por_sujeto, vector<sujeto> sujetos, MatrixXd &X, MatrixXd &M_x, RowVectorXd &media);
-void inline reducirEspacio(RowVectorXd& imagen, MatrixXd& TL);
 
+void transfCaracteristica(MatrixXd& M_x, unsigned int k, unsigned int its, MatrixXd& V, vector<double> &autovalores);
+void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned int img_por_sujeto, vector<sujeto> sujetos, MatrixXd &X, MatrixXd &M_x, RowVectorXd &media);
+double inline distancia(const VectorXd &a, const VectorXd &b){VectorXd temp = a - b; return temp.norm();};
 // -------------- separador de bajo presupuesto --------------
 // Clasificacion
 
