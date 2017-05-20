@@ -290,16 +290,6 @@ int main(int argc, char const *argv[]) {
     std::cout << "Pasando imagenes a nuevo espacio...\r" << std::flush;
     MatrixXd Xt = X.transpose();
 
-
-    // Me guardo las caras centradas
-    std::vector< std::vector<VectorXd> > imgs_por_sujeto(sujetos.size());
-    for (size_t i = 0; i < sujetos.size(); i++){
-        imgs_por_sujeto[i] = std::vector<VectorXd>(img_por_sujeto);
-        for (size_t j = 0; j < img_por_sujeto; j++){
-            imgs_por_sujeto[i][j] = Xt.col(i*img_por_sujeto+j);
-        }
-    }
-
     // Vector que contiene cada cara de cada sujetos en un vector, ya convertida al nuevo espacio
     std::vector< std::vector<VectorXd> > clase_de_sujetos(sujetos.size());
 
@@ -378,6 +368,16 @@ int main(int argc, char const *argv[]) {
         Este flag indica que se intente adivinar si la imagen
         pasada como parámetro es una cara o no.
         */
+
+        // Me guardo las caras centradas
+        std::vector< std::vector<VectorXd> > imgs_por_sujeto(sujetos.size());
+        for (size_t i = 0; i < sujetos.size(); i++){
+            imgs_por_sujeto[i] = std::vector<VectorXd>(img_por_sujeto);
+            for (size_t j = 0; j < img_por_sujeto; j++){
+                imgs_por_sujeto[i][j] = Xt.col(i*img_por_sujeto+j);
+            }
+        }
+
         const char* isImage_route = flags.caraOno;
         std::cout << isImage_route << std::endl;
         double max_norm = train_recognizer(V_normalized, imgs_por_sujeto);
@@ -385,7 +385,7 @@ int main(int argc, char const *argv[]) {
         get_image(isImage_route, img_ancho, img_alto, target, isImage_route);
         target = target - media;
         VectorXd target_t_centered = target.transpose();
-        if (recognize(V_normalized, max_norm, target_t_centered)) {
+        if (recognize(V_normalized, max_norm*1, target_t_centered)) {
             std::cout << termcolor::green << "Esto es una CARA!" << termcolor::reset << std::endl;
         }else{
             std::cout << termcolor::red << "Esto NO es una CARA... :>(!" << termcolor::reset << std::endl;
