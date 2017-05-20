@@ -108,7 +108,7 @@ int main(int argc, char const *argv[]) {
         } else if (c == 2) {
             method_name = "WEIGHTED";
         }
-        std::cout << method_name << "####\n"; 
+        std::cout << method_name << " ####\n"; 
 
         vector<int> res(tests.size());
         vector< vector<int> > confusion(sujetos.size(), vector<int>(sujetos.size()));
@@ -141,8 +141,6 @@ int main(int argc, char const *argv[]) {
                 std::cout << termcolor::red << tests[i].respuesta << " parece ser " << res[i] << termcolor::reset << '\n';
             }
         }
-
-        printf("YEIAHZZZ");
 
         vector<float> accuracy(sujetos.size());
         string accuracy_path = "./metricas/";
