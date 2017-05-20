@@ -131,7 +131,8 @@ void deflacionar(MatrixXd& B, VectorXd& v, double lambda){
     B = B - lambda*v*vt;
 }
 
-void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned int img_por_sujeto, vector<sujeto> sujetos, MatrixXd &X, MatrixXd &M_x, RowVectorXd &media){
+void cargar_datos(unsigned int img_alto, unsigned int img_ancho, vector<sujeto> sujetos, MatrixXd &X, RowVectorXd &media){
+    unsigned int img_por_sujeto = sujetos[0].size();
     X.resize(img_por_sujeto*sujetos.size(), img_alto*img_ancho);
     media.resize(img_alto*img_ancho);
     media.setZero();
@@ -149,16 +150,16 @@ void matrizCovarianza(unsigned int img_alto, unsigned int img_ancho, unsigned in
     for (size_t i = 0; i < sujetos.size()*img_por_sujeto; i++) {
         X.row(i) -= media;
     }
-
-    // Calculo la matriz de covarianza
-    M_x.resize(img_alto*img_ancho,img_alto*img_ancho);
-    MatrixXd Xt = X.transpose();
-    M_x = Xt*X;
-    M_x /= ((double)(sujetos.size()*img_por_sujeto -1));
 }
 
-void transfCaracteristica(MatrixXd& M_x, unsigned int k, unsigned int its, MatrixXd& V, vector<double> &autovalores){
-    V.resize(M_x.rows(),k);
+void transfCaracteristica_v1(MatrixXd& X, unsigned int k, unsigned int its, MatrixXd& V, vector<double> &autovalores){
+
+    // Calculo la matriz de covarianza
+    MatrixXd M_x = X.transpose()*X;
+    M_x /= (double)(X.rows());
+
+    // Calculo la transformación característica V
+    V.resize(X.cols(),k);
     autovalores.clear();
     for (size_t i = 0; i < k; i++) {
         VectorXd v = M_x.col(0); // un vector cualquiera
@@ -166,6 +167,24 @@ void transfCaracteristica(MatrixXd& M_x, unsigned int k, unsigned int its, Matri
         autovalores.push_back(lambda);
         deflacionar(M_x,v,lambda);
         V.col(i) = v;
+    }
+}
+void transfCaracteristica_v2(MatrixXd& X, unsigned int k, unsigned int its, MatrixXd& V, vector<double> &autovalores){
+
+    // Calculo X*Xt = M_x moño
+    MatrixXd Xt = X.transpose();
+    MatrixXd Mm_x = X*Xt;;
+    Mm_x /= (double)(X.rows());
+
+    // Calculo la transformación característica V
+    V.resize(X.cols(),k);
+    autovalores.clear();
+    for (size_t i = 0; i < k; i++) {
+        VectorXd v = Mm_x.col(0); // un vector cualquiera
+        double lambda = metodoPotencia(Mm_x,v,its);
+        autovalores.push_back(lambda);
+        deflacionar(Mm_x,v,lambda);
+        V.col(i) = Xt*v;
     }
 }
 
@@ -195,7 +214,6 @@ double train_recognizer(const MatrixXd& V, const std::vector< std::vector<Vector
     }
     return max;
 }
-
 
 bool recognize(const MatrixXd &V, const double& umbral, VectorXd& target){
     MatrixXd V_t = V.transpose();
