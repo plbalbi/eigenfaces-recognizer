@@ -82,7 +82,7 @@ void show_help(){
     caras_art += "    \\__\\/        \\__\\/        \\__\\/        \\__\\/        \\__\\/         \n\n";
     std::string message = "Uso de este super reconocedor de caras (no la revista):\n";
     message += "\n";
-    message += "./tp <ruta-config> <ruta-salida> <flags>\n";
+    message += "./tp <ruta-parámetros> <ruta-salida> <flags>\n";
     message += "\n";
     message += "El campo <flags> puede ser alguno/s de los siguientes: \n";
     message += "\t -c <ruta-imagen> (determinar si la imagen de la ruta es o no una cara) \n";

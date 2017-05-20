@@ -34,25 +34,34 @@ int main(int argc, char const *argv[]) {
     in_path = argv[1];
     out_path = argv[2];
 
-    std::cout << "Leyendo entrada de datos...\r" << std::flush;
+    std::cout << "Leyendo parámetros de entrada...\r" << std::flush;
     read_input(in_path, img_ancho, img_alto, k, sujetos, tests);
-    std::cout << "Leyendo entrada de datos...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
     if (sujetos.size()>0) img_por_sujeto = sujetos[0].size();
+    std::cout << "Leyendo parámetros de entrada...\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
+    // -------------- separador de bajo presupuesto --------------
 
     std::cout << "Armando TL al espacio copado...\r" << std::flush;
     MatrixXd X;
     RowVectorXd media;
     cargar_datos(img_alto, img_ancho, sujetos, X, media);
+
     MatrixXd V;
     std::vector<double> autovalores;
-
     transfCaracteristica_v2(X, k, 500, V, autovalores); //calcula los autovectores con la matriz X*Xt
     // transfCaracteristica_v1(X, k, 500, V, autovalores); //calcula los autovectores con la matriz Xt*X
-    
     MatrixXd Vt = V.transpose();
+
+    MatrixXd V_normalized = V;
+    for (size_t i = 0; i < V_normalized.cols(); i++) {
+        V_normalized.col(i) = V_normalized.col(i) /  V_normalized.col(i).norm();
+        //V_normalized.col(i) = V_normalized.col(i).array().abs()*(255/V_normalized.col(i).maxCoeff());
+    }
     std::cout << "Armando TL al espacio copado...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
+    // -------------- separador de bajo presupuesto --------------
+
+    std::cout << "Guardando autovalores...\r" << std::flush;
     ofstream out;
     out.open(out_path);
     out << std::setprecision(9); // 9 dígitos
@@ -60,17 +69,11 @@ int main(int argc, char const *argv[]) {
         out << sqrt(autovalores[i]) << '\n';
     }
     out.close();
+    std::cout << "Guardando autovalores...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
-    // La matrix X tiene la imagenes de entrenamiento
+    // -------------- separador de bajo presupuesto --------------
 
-    MatrixXd V_normalized = V;
-    save_image("sujetos/media.pgm", img_ancho, img_alto, media);
-    for (size_t i = 0; i < V_normalized.cols(); i++) {
-      V_normalized.col(i) = V_normalized.col(i) /  V_normalized.col(i).norm();
-      //V_normalized.col(i) = V_normalized.col(i).array().abs()*(255/V_normalized.col(i).maxCoeff());
-    }
-
-    std::cout << "Pasando imagenes a nuevo espacio...\r" << std::flush;
+    std::cout << "Pasando imágenes a nuevo espacio...\r" << std::flush;
     MatrixXd Xt = X.transpose();
 
     // Vector que contiene cada cara de cada sujetos en un vector, ya convertida al nuevo espacio
@@ -85,14 +88,15 @@ int main(int argc, char const *argv[]) {
             clase_de_sujetos[i][j] = PXt.col(i*img_por_sujeto+j);
         }
     }
-    std::cout << "Pasando imagenes a nuevo espacio...\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
+    std::cout << "Pasando imágenes a nuevo espacio...\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
-    // Corriendo reconocimiento de caras
+    // -------------- separador de bajo presupuesto --------------
+
     std::cout << "############ RECONOCIENDO CARAS ############" << '\n';
     MatrixXd X_mono = X*V;
 
     // Clasificación
-    int classification_methods = 3; 
+    unsigned int classification_methods = 3;
     vector< vector<int> > res(classification_methods, vector<int>(tests.size()));
     for (size_t c = 0; c < classification_methods; c++){
         for (size_t i = 0; i < tests.size(); i++) {
@@ -123,7 +127,7 @@ int main(int argc, char const *argv[]) {
         } else if (c == 2) {
             std::cout << "WEIGHTED KNN ####\n"; //weighted knn
         }
-        
+
         for (size_t i = 0; i < tests.size(); i++) {
             std::cout << "(" + tests[i].path + ") ";
             if (tests[i].respuesta == res[c][i]) {
@@ -150,8 +154,10 @@ int main(int argc, char const *argv[]) {
     std::cout << "\n Tiempo de ejecución: ~ "<< end - start << " seg" << '\n';
 
 
+    // -------------- separador de bajo presupuesto --------------
 
-    // A partir de acá comienzan a ejecutarse los flags que agregan cosas.
+
+    // A partir de acá comienzan a ejecutarse los flags que agregan cosas
 
     if (flags.caraOno != NULL) {
         /*
@@ -222,6 +228,7 @@ int main(int argc, char const *argv[]) {
             remove(prueba.c_str());
             // ofstream autovectores;
             // autovectores.open("autovectores.txt");
+            save_image("sujetos/media.pgm", img_ancho, img_alto, media);
             for (size_t i = 0; i < k; i++) {
                 std::string save_route = base_dir;
                 save_route += "autovector";
