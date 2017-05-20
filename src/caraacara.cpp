@@ -382,7 +382,7 @@ int main(int argc, char const *argv[]) {
         std::cout << isImage_route << std::endl;
         double max_norm = train_recognizer(V_normalized, imgs_por_sujeto);
         RowVectorXd target;
-        get_image(isImage_route, img_ancho, img_alto, target, isImage_route);
+        get_image(flags.caraOno, img_ancho, img_alto, target, flags.caraOno);
         target = target - media;
         VectorXd target_t_centered = target.transpose();
         if (recognize(V_normalized, max_norm*1, target_t_centered)) {
