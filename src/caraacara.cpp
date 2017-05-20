@@ -67,8 +67,8 @@ int kNN(const vector< vector< VectorXd> > &clase_de_sujetos, const VectorXd &v, 
 
 int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, const VectorXd &v, int k){
     std::vector< std::pair<int, double> > distances;
-    for (int s = 0; s < clase_de_sujetos.size(); s++) {
-       for (int i = 0; i < clase_de_sujetos[0].size(); i++) {
+    for (size_t s = 0; s < clase_de_sujetos.size(); s++) {
+       for (size_t i = 0; i < clase_de_sujetos[0].size(); i++) {
            distances.push_back(std::make_pair(s+1, distancia(clase_de_sujetos[s][i], v)));
        }
     }
@@ -79,7 +79,7 @@ int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, cons
     }
     int max_clase;
     int max_qty = 0;
-    for (int i = 0; i < counts.size(); i++) {
+    for (size_t i = 0; i < counts.size(); i++) {
         if (counts[i] > max_qty) {
             max_qty = counts[i];
             max_clase = i;
@@ -90,8 +90,8 @@ int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, cons
 
 int weighted_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, const VectorXd &v, int k){
     std::vector< std::pair<int, double> > distances;
-    for (int s = 0; s < clase_de_sujetos.size(); s++) {
-       for (int i = 0; i < clase_de_sujetos[0].size(); i++) {
+    for (size_t s = 0; s < clase_de_sujetos.size(); s++) {
+       for (size_t i = 0; i < clase_de_sujetos[0].size(); i++) {
            distances.push_back(std::make_pair(s+1, distancia(clase_de_sujetos[s][i], v)));
        }
     }
@@ -103,7 +103,7 @@ int weighted_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, 
     }
     int max_clase;
     double max_qty = 0;
-    for (int i = 0; i < counts.size(); i++) {
+    for (size_t i = 0; i < counts.size(); i++) {
         if (counts[i] > max_qty) {
             max_qty = counts[i];
             max_clase = i;
@@ -195,8 +195,8 @@ double train_recognizer(const MatrixXd& V, const std::vector< std::vector<Vector
     std::vector<double> measuring (clase_de_sujetos.size()*clase_de_sujetos[0].size(), 0);
     MatrixXd V_t = V.transpose();
     // Lo hago en el vector por si depues decidimos sacar no el maximo, sino otra cosa?
-    for (int s = 0; s < clase_de_sujetos.size(); s++) {
-        for (int i = 0; i < clase_de_sujetos[0].size(); i++) {
+    for (size_t s = 0; s < clase_de_sujetos.size(); s++) {
+        for (size_t i = 0; i < clase_de_sujetos[0].size(); i++) {
             double m;
             VectorXd coordinates = V_t*clase_de_sujetos[s][i];
             VectorXd proyection = V*coordinates;
@@ -207,7 +207,7 @@ double train_recognizer(const MatrixXd& V, const std::vector< std::vector<Vector
     }
     // Get max
     double max = 0;
-    for (int i = 0; i < measuring.size(); i++) {
+    for (size_t i = 0; i < measuring.size(); i++) {
         if (measuring[i] > max) {
             max = measuring[i];
         }
