@@ -156,7 +156,7 @@ void transfCaracteristica_v1(MatrixXd& X, unsigned int k, unsigned int its, Matr
 
     // Calculo la matriz de covarianza
     MatrixXd M_x = X.transpose()*X;
-    M_x /= (double)(X.rows());
+    M_x /= (double)(X.rows()-1);
 
     // Calculo la transformación característica V
     V.resize(X.cols(),k);
@@ -174,7 +174,7 @@ void transfCaracteristica_v2(MatrixXd& X, unsigned int k, unsigned int its, Matr
     // Calculo X*Xt = M_x moño
     MatrixXd Xt = X.transpose();
     MatrixXd Mm_x = X*Xt;;
-    Mm_x /= (double)(X.rows());
+    Mm_x /= (double)(X.rows()-1);
 
     // Calculo la transformación característica V
     V.resize(X.cols(),k);
