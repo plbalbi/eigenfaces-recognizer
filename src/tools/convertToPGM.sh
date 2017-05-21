@@ -16,14 +16,22 @@ if test "$#" -ne 3; then
 fi
 
 
+
+count=`ls -1 $1/*.jpg 2>/dev/null | wc -l`
+if [ $count != 0 ]
+then 
+	mogrify -format pgm -resize $2x$3\! $1/*.jpg
+	mkdir pgm
+fi 
+
+count=`ls -1 $1/*.png 2>/dev/null | wc -l`
+if [ $count != 0 ]
+then 
+	mogrify -format pgm -resize $2x$3\! $1/*.png
+	mkdir pgm
+fi 
+
 count=1
-
-
-mogrify -format pgm -resize $2x$3\! $1/*.jpg
-mkdir pgm
-#mv $1/*.pgm pgm/
-
-
 for i in $1/*.pgm
 do
     if test -f $i 
