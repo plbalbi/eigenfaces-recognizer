@@ -15,16 +15,16 @@ parser.add_argument( "dir", help="ruta de la base de datos" )
 parser.add_argument( "k", help="cantidad de componentes principales", type=int )
 parser.add_argument( "-s", help="cantidad de sujetos a considerar (default = all)", default=1000000, type=int )
 parser.add_argument( "-i", help="cantidad de imágenes por sujeto considerar (default = all)", default=1000000, type=int )
-parser.add_argument( "-es", help="lista con sujetos para entrenar (default = none)", default="[]")
-parser.add_argument( "-ei", help="lista con números de imagenes para entrenar (default = [1])", default="[1]")
+parser.add_argument( "-ts", help="lista con sujetos para testear (default = none)", default="[]")
+parser.add_argument( "-ti", help="lista con números de imagenes para testear (default = [1])", default="[1]")
 args = parser.parse_args()
 
 directory = args.dir
 k = args.k
 lim_sujetos = args.s
 lim_imgs = args.i
-test_rows = ast.literal_eval(args.es)
-test_cols = ast.literal_eval(args.ei)
+test_rows = ast.literal_eval(args.ts)
+test_cols = ast.literal_eval(args.ti)
 
 
 # CONTROL DE LA ENTRADA
