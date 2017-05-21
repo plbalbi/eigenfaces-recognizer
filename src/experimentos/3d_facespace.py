@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt # show
 from mpl_toolkits.mplot3d import Axes3D # scatter
 
 # Generating Input
-subprocess.call(['python3', './tools/make_input.py' \
+subprocess.call(['python', './tools/make_input.py' \
     , '../data/ImagenesCaras/', '3' \
     , '-s', '8'])
 
