@@ -1,4 +1,13 @@
-Para utilizar los scripts en python, instalar python 2.7. Para ejecutar los scripts, desde una consolo ejecutar:
+# Experimento
+Para correr los experimentos, instalar python 2.7 o versiones más recientes.
+
+Los experimentos se encuentran en la carpeta 'experimentos', y deben ser llamados como desde la carpeta 'src', de la siguiente forma:
+
+python experimentos/nombre_experimento.py
+
+
+# Scripts de la cátedra
+Para utilizar los scripts en python, instalar python 2.7. Para ejecutar los scripts, desde una consola ejecutar:
 
 python metnum.py opcion
 
