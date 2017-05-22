@@ -32,8 +32,8 @@ int main(int argc, char const *argv[]) {
     unsigned int iterations = 500;
 
     // Para los experimentos en los (Ja, es 1 nomás) necesitemos usar un numero de its custom
-    if (flags.its != NULL) {
-        iterations = *flags.its;
+    if (flags.its != -1) {
+        iterations = flags.its;
     }
 
     vector<sujeto> sujetos;

@@ -14,7 +14,7 @@ struct flags_t{
     const char * caraOno; // -c
     const char * vecReducidos; // -v
     const char * autocaras; // -a
-    int* its; // -i | --its
+    int its = -1; // -i | --its
 };
 
 // Tipos
