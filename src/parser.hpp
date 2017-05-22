@@ -17,6 +17,7 @@ struct flags_t{
     int its = -1; // -i | --its
     const char * matriz; // -m
     const char * tiempo; // -t
+    bool silent = false; // -s 
 };
 
 // Tipos

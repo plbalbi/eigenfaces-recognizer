@@ -35,6 +35,11 @@ int main(int argc, char const *argv[]) {
         iterations = flags.its;
     }
 
+    // Modo silencioso
+    if (flags.silent) {
+        std::cout.setstate(std::ios_base::failbit);
+    }
+
     vector<sujeto> sujetos;
     vector<test> tests;
 
