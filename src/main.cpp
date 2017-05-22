@@ -7,7 +7,7 @@
 
 
 int main(int argc, char const *argv[]) {
-    time_t start = time(NULL);
+    clock_t start_clock = clock();
 
     if ((argc == 2) && argv[1] == std::to_string(42)) {
         // Correr tests si se introdujo el número secreto
@@ -217,8 +217,9 @@ int main(int argc, char const *argv[]) {
     }
 
 
-    time_t end = time(NULL);
-    std::cout << "\n Tiempo de ejecución: ~ "<< end - start << " seg" << '\n';
+    clock_t end_clock = clock();
+    double segundos = (double)(end_clock - start_clock)/CLOCKS_PER_SEC;
+    std::cout << "\n Tiempo de ejecución: ~ "<< segundos << " seg" << '\n';
 
 
     // -------------- separador de bajo presupuesto --------------
