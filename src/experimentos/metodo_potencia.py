@@ -1,28 +1,78 @@
+# -*- coding: utf-8 -*-
 import subprocess # call
+import os
 import pandas as pd # read_table
 import matplotlib.pyplot as plt # show
-from mpl_toolkits.mplot3d import Axes3D # scatter
+import numpy as np
 
-# Generating Input
-# python tools/make_input.py ../data/ImagenesCaras/ 5 -s 10 -ti [1,2,3]
-subprocess.call(['python', './tools/make_input.py' \
-    , '../data/ImagenesCaras/', '5' \
-    , '-s', '10', '-ts', '[1,2,3]'])
+# disclaimer
+print("DISLAIMER: Ejecutame desde la carpeta experimentos por favor... gracias!")
 
-# Executing
-# ./tp  data.in salida.out -v autovectores.txt -i 500
-subprocess.call(['./tp', 'data.in', 'data.out' \
-    , '-v', './autovectores.txt', '-i', '50'])
+# Experiment values
+initial_value = 10
+step = 10
+max_value = 300
+warm_up = 50 # Para que el proce ya tenga todo lo necesario en cache WARM UP
+trimming = 20 # Para quedarse con la media de todas la medidas obtenidas
+# File parsing values
+accuracy_file = "./metricas/KNN_accuracy.out"
+time_file = "./tiempo.dat"
+x_axis = []
+acc_axis = []
+time_axis = []
+# sys call 
+input_maker = ['python', './tools/make_input.py' \
+    , '../data/ImagenesCaras/', '15' \
+    , '-s', '30', '-ti', '[1,2,3]']
+tp = ['./tp', 'data.in', 'data.out' \
+    ,'-t',time_file , '-i']
 
-# Reading Output
-vectores = pd.read_table('autovectores.txt', delim_whitespace=True, \
-  names=['class','x','y','z'])
+# PWD es ahora src/
+# para que guarde el data.in ahi, y poder llamar a ./tp mas facil
+os.chdir("../")
 
-# Cleaning Up
-subprocess.call(['rm', 'data.in', 'data.out' , 'autovectores.txt'])
+print("Calenteando...")
+for w in range(0, warm_up):
+    subprocess.call(input_maker)
+    subprocess.call(tp + [str(initial_value)], stdout=open(os.devnull, 'wb'))
 
-# Plotting
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.scatter(vectores['x'], vectores['y'], vectores['z'], c=vectores['class'])
-plt.show()
+print("Empezando experimento...")
+for its in range(initial_value, max_value+step, step):
+    print("Corriendo para ",its," iteraciones...")
+    temp_time = []
+    temp_acc = []
+    x_axis.append(its)
+    subprocess.call(input_maker)
+    for t in range(0,trimming):
+        subprocess.call(tp+[str(its)], stdout=open(os.devnull, 'wb'))
+        acc_results = pd.read_table(accuracy_file, delim_whitespace=True, \
+            names=['class','acc'])
+        temp_acc.append(np.mean(acc_results["acc"]))
+        t = open(time_file, "r")
+        temp_time.append(float(t.read()))
+        t.close()
+    media_time = np.mean(temp_time)
+    print("Tiempo medio: ", media_time)
+    media_acc = np.mean(temp_acc)
+    print("Accuracy media: ", media_acc)
+    acc_axis.append(float(media_acc))
+    time_axis.append(float(media_time))
+
+# Cleaning
+subprocess.call(["rm", time_file])
+
+
+plt.plot(x_axis, time_axis, 'r-')
+plt.ylabel('Segundos')
+plt.xlabel('Cantidad de iteraciones en método potencia')
+plt.savefig('metodo_potencia_time.pdf',format='pdf')
+plt.clf()
+plt.plot(x_axis, acc_axis, 'b-')
+plt.ylabel('Accuracy')
+plt.xlabel('Cantidad de iteraciones en método potencia')
+plt.savefig('metodo_potencia_acc.pdf',format='pdf')
+
+
+
+
+
