@@ -93,7 +93,7 @@ with open(os.path.join('.', 'data.in'), 'w') as data:
     data.write(directory + ' ')
     data.write(str(height) + ' ')
     data.write(str(width) + ' ')
-    data.write(str(len(sujetos)) + ' ')
+    data.write(str(len(sujetos) - len(test_rows)) + ' ')
     data.write(str(nimgp) + ' ')
     data.write(str(k) + '\n')
 
@@ -116,7 +116,7 @@ with open(os.path.join('.', 'data.in'), 'w') as data:
         for i in list(range(1, imgs_per_subject+1)):
             test_filename = str(i) + ".pgm"
             data.write(os.path.join(rutas[j], test_filename))
-            data.write(' ' + str(j+1) + '\n') #clase
+            data.write(' 0\n') #clase
     for i in test_cols:
         for j in range(0, len(sujetos)):
             test_filename = str(i) + ".pgm"
