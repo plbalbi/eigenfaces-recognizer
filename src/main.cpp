@@ -7,7 +7,6 @@
 
 
 int main(int argc, char const *argv[]) {
-    time_t start = time(NULL);
 
     if ((argc == 2) && argv[1] == std::to_string(42)) {
         // Correr tests si se introdujo el número secreto
@@ -32,8 +31,8 @@ int main(int argc, char const *argv[]) {
     unsigned int iterations = 500;
 
     // Para los experimentos en los (Ja, es 1 nomás) necesitemos usar un numero de its custom
-    if (flags.its != NULL) {
-        iterations = *flags.its;
+    if (flags.its != -1) {
+        iterations = flags.its;
     }
 
     vector<sujeto> sujetos;
@@ -47,6 +46,8 @@ int main(int argc, char const *argv[]) {
     if (sujetos.size()>0) img_por_sujeto = sujetos[0].size();
     std::cout << "Leyendo parámetros de entrada...\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
+
+    clock_t start_clock = clock();
     // -------------- separador de bajo presupuesto --------------
 
     std::cout << "Armando TL al espacio copado...\r" << std::flush;
@@ -217,8 +218,9 @@ int main(int argc, char const *argv[]) {
     }
 
 
-    time_t end = time(NULL);
-    std::cout << "\n Tiempo de ejecución: ~ "<< end - start << " seg" << '\n';
+    clock_t end_clock = clock();
+    double segundos = (double)(end_clock - start_clock)/CLOCKS_PER_SEC;
+    std::cout << "\n Tiempo de ejecución: ~ "<< segundos << " seg" << '\n';
 
 
     // -------------- separador de bajo presupuesto --------------
@@ -276,6 +278,20 @@ int main(int argc, char const *argv[]) {
         }
 
         vectores.close();
+    }
+
+    if (flags.tiempo != NULL) {
+        /*
+        "-t"
+        Este flag indica que se guarde en un archivo el tiempo
+        de ejecución del método.
+        */
+        const char* salida_t = flags.tiempo;
+        ofstream tiempo;
+        tiempo.open(salida_t);
+        tiempo << std::setprecision(10);
+        tiempo << segundos;
+        tiempo.close();
     }
 
 
