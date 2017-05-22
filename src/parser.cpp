@@ -26,7 +26,7 @@ flags_t get_flags(int argc, char const *argv[]){
         }else if (strcmp(param, "-m") == 0){
             res.matriz = "Tu javie";
         }else if (strcmp(param, "-t") == 0){
-            res.tiempo = argv[i+1];
+            res.tiempo = "tiempo.dat";
         }
     }
 
