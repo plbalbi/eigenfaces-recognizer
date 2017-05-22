@@ -58,10 +58,9 @@ def get_dimensions(img):
             (width, height) = [int(b) for b in temp[1:3]]
         else:
             temp = pgm.readline().rstrip()
-            if temp[0:1] == b'#':
-                (width, height) = [int(b) for b in pgm.readline().split()]
-            else:
-                (width, height) = [int(b) for b in temp.split()]
+            while temp[0:1] == b'#':
+                temp = pgm.readline().rstrip()
+            (width, height) = [int(b) for b in temp.split()]
     return (width, height)
 
 imagen_base = imagenes[0]
