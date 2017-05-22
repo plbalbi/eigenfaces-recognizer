@@ -56,8 +56,13 @@ int main(int argc, char const *argv[]) {
 
     MatrixXd V;
     std::vector<double> autovalores;
-    transfCaracteristica_v2(X, k, iterations, V, autovalores); //calcula los autovectores con la matriz X*Xt
-    // transfCaracteristica_v1(X, k, 500, V, autovalores); //calcula los autovectores con la matriz Xt*X
+    if (flags.matriz != NULL) {
+        //calcula los autovectores con la matriz Xt*X
+        transfCaracteristica_v1(X, k, 500, V, autovalores);
+    }else{
+        //calcula los autovectores con la matriz X*Xt
+        transfCaracteristica_v2(X, k, iterations, V, autovalores);
+    }
     MatrixXd Vt = V.transpose();
 
     MatrixXd V_normalized = V;
@@ -115,7 +120,7 @@ int main(int argc, char const *argv[]) {
         } else if (c == 2) {
             method_name = "WEIGHTED";
         }
-        std::cout << method_name << " ####\n"; 
+        std::cout << method_name << " ####\n";
 
         vector<int> res(tests.size());
         vector< vector<int> > confusion(sujetos.size(), vector<int>(sujetos.size()));
@@ -155,7 +160,7 @@ int main(int argc, char const *argv[]) {
         accuracy_path += "_accuracy.out";
         ofstream accuracy_file;
         accuracy_file.open(accuracy_path);
-        
+
         vector<float> recall(sujetos.size());
         string recall_path = "./metricas/";
         recall_path += method_name;
@@ -193,7 +198,7 @@ int main(int argc, char const *argv[]) {
             } else {
                 recall[s] = 0;
             }
-            if (accuracy[s] + recall[s] != 0) { 
+            if (accuracy[s] + recall[s] != 0) {
                 f1[s] = 2 * accuracy[s] * recall[s] / (accuracy[s] + recall[s]);
             } else {
                 f1[s] = 0;
@@ -210,7 +215,7 @@ int main(int argc, char const *argv[]) {
 
         printf("\n");
     }
- 
+
 
     time_t end = time(NULL);
     std::cout << "\n Tiempo de ejecución: ~ "<< end - start << " seg" << '\n';

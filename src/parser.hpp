@@ -15,6 +15,7 @@ struct flags_t{
     const char * vecReducidos; // -v
     const char * autocaras; // -a
     int* its; // -i | --its
+    const char * matriz; // -m
 };
 
 // Tipos

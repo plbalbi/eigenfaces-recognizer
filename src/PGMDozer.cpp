@@ -95,8 +95,9 @@ void show_help(){
     message += "El campo <flags> puede ser alguno/s de los siguientes: \n";
     message += "\t -c <ruta-imagen> (determinar si la imagen de la ruta es o no una cara) \n";
     message += "\t -v <ruta-salida> (guardar vectores de entrenamiento reducidos con PCA) \n";
-    message += "\t -a  (guardar en sujetos/ las autocaras en .pgm) \n";
-    message += "\t -i o --its  Número de iteraciones que hace método potencia \n";
+    message += "\t -a  (guardar en 'sujetos/' las autocaras en .pgm) \n";
+    message += "\t -i o --its  (determinar la cantidad de iteraciones que hace método potencia) \n";
+    message += "\t -m  (calcular autovectores usando la matriz de covarianza) \n";
     message += "Salu2\n";
     std::cout << termcolor::red << caras_art << termcolor::reset ;
     std::cout << termcolor::bold << termcolor::red << "\t\t\tRECOGNIZER\n\n" << termcolor:: reset << std::endl;

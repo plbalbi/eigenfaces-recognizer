@@ -9,6 +9,8 @@ flags_t get_flags(int argc, char const *argv[]){
     res.caraOno = NULL;
     res.vecReducidos = NULL;
     res.autocaras = NULL;
+    res.its = NULL;
+    res.matriz = NULL;
 
     for (int i = 0; i < argc; i++) {
         const char* param = argv[i];
@@ -21,6 +23,8 @@ flags_t get_flags(int argc, char const *argv[]){
             res.autocaras = "Blah"; // no requiere nada
         }else if (strcmp(param, "--its") == 0 || strcmp(param, "-i") == 0) {
             *(res.its) = stoi(argv[i+1]);
+        }else if (strcmp(param, "-m") == 0){
+            res.matriz = "Tu javie";
         }
     }
 
