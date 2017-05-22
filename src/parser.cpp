@@ -19,6 +19,8 @@ flags_t get_flags(int argc, char const *argv[]){
             res.vecReducidos = argv[i+1];
         }else if(strcmp(param, "-a") == 0){
             res.autocaras = "Blah"; // no requiere nada
+        }else if (strcmp(param, "--its") == 0 || strcmp(param, "-i") == 0) {
+            *(res.its) = stoi(argv[i+1]);
         }
     }
 

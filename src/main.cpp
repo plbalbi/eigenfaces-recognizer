@@ -29,6 +29,13 @@ int main(int argc, char const *argv[]) {
     unsigned int img_alto;
     unsigned int img_por_sujeto;
     unsigned int k;
+    unsigned int iterations = 500;
+
+    // Para los experimentos en los (Ja, es 1 nomás) necesitemos usar un numero de its custom
+    if (flags.its != NULL) {
+        iterations = *flags.its;
+    }
+
     vector<sujeto> sujetos;
     vector<test> tests;
 
@@ -49,7 +56,7 @@ int main(int argc, char const *argv[]) {
 
     MatrixXd V;
     std::vector<double> autovalores;
-    transfCaracteristica_v2(X, k, 500, V, autovalores); //calcula los autovectores con la matriz X*Xt
+    transfCaracteristica_v2(X, k, iterations, V, autovalores); //calcula los autovectores con la matriz X*Xt
     // transfCaracteristica_v1(X, k, 500, V, autovalores); //calcula los autovectores con la matriz Xt*X
     MatrixXd Vt = V.transpose();
 
