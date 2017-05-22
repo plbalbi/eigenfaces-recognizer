@@ -24,20 +24,23 @@ void get_image(const char* image_route, unsigned int ancho, unsigned int alto, R
     //La imagen ya fue abierta aca
     string version, comment, maxvalue;
     unsigned int ancho_r, alto_r;
+    while (source.peek()=='#') getline(source, comment); // si hay commentarios
     source >> version; // numero mágico: formato de archivo
     source >> std::ws; // salto espacios
-    if (source.peek()=='#') getline(source, comment); // si hay commentario
+    while (source.peek()=='#') getline(source, comment); // si hay commentarios
     source >> ancho_r ; // ancho
     source >> std::ws; // salto espacios
-    if (source.peek()=='#') getline(source, comment); // si hay commentario
+    while (source.peek()=='#') getline(source, comment); // si hay commentarios
     source >> alto_r ; // alto
+    while (source.peek()=='#') getline(source, comment); // si hay commentarios
     if (ancho_r != ancho || alto_r != alto) {
         std::cerr << "ERROR: la imagen '" << error_msg << "' no mide "<<ancho<<"x"<<alto << std::endl;
         exit(3);
     }
     source >> std::ws; // salto espacios
-    if (source.peek()=='#') getline(source, comment); // si hay commentario
+    while (source.peek()=='#') getline(source, comment); // si hay commentarios
     getline(source, maxvalue); // maxValue
+    while (source.peek()=='#') getline(source, comment); // si hay commentarios
 
     /* DEBUG
     bytes = bytes - source.tellg() ;
