@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt # show
 from mpl_toolkits.mplot3d import Axes3D # scatter
 
 # Como al marica del python no le gustan las tildes hay que hacerse el angloparlante
+# Python3 boi
 
 FNULL = open(os.devnull, 'w')
 
