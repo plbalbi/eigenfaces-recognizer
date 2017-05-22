@@ -10,6 +10,7 @@ flags_t get_flags(int argc, char const *argv[]){
     res.vecReducidos = NULL;
     res.autocaras = NULL;
     res.matriz = NULL;
+    res.tiempo = NULL;
 
     for (int i = 0; i < argc; i++) {
         const char* param = argv[i];
@@ -24,6 +25,8 @@ flags_t get_flags(int argc, char const *argv[]){
             res.its = stoi(argv[i+1]);
         }else if (strcmp(param, "-m") == 0){
             res.matriz = "Tu javie";
+        }else if (strcmp(param, "-t") == 0){
+            res.tiempo = "tiempo.dat";
         }
     }
 

@@ -98,6 +98,7 @@ void show_help(){
     message += "\t -a  (guardar en 'sujetos/' las autocaras en .pgm) \n";
     message += "\t -i o --its  (determinar la cantidad de iteraciones que hace método potencia) \n";
     message += "\t -m  (calcular autovectores usando la matriz de covarianza) \n";
+    message += "\t -t  (guardar en 'tiempo.dat' el tiempo de ejecución en segundos) \n";
     message += "Salu2\n";
     std::cout << termcolor::red << caras_art << termcolor::reset ;
     std::cout << termcolor::bold << termcolor::red << "\t\t\tRECOGNIZER\n\n" << termcolor:: reset << std::endl;
