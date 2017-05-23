@@ -16,9 +16,6 @@ subprocess.call(['./tp', 'data.in', 'data.out' \
 vectores = pd.read_table('autovectores.txt', delim_whitespace=True, \
   names=['class','x','y','z'])
 
-# Cleaning Up
-subprocess.call(['rm', 'data.in', 'data.out' , 'autovectores.txt'])
-
 # Plotting
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
