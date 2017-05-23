@@ -54,7 +54,7 @@ for its in range(initial_value, max_value+step, step):
     media_time = np.mean(temp_time)
     print("Tiempo medio: ", media_time)
     media_acc = np.mean(temp_acc)
-    print("Accuracy media: ", media_acc)
+    print("Precisión media: ", media_acc)
     acc_axis.append(float(media_acc))
     time_axis.append(float(media_time))
 
@@ -68,7 +68,7 @@ plt.xlabel('Cantidad de iteraciones en método potencia')
 plt.savefig('metodo_potencia_time.pdf',format='pdf')
 plt.clf()
 plt.plot(x_axis, acc_axis, 'b-')
-plt.ylabel('Accuracy')
+plt.ylabel('Precisión')
 plt.xlabel('Cantidad de iteraciones en método potencia')
 plt.savefig('metodo_potencia_acc.pdf',format='pdf')
 
