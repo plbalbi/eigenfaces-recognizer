@@ -197,17 +197,17 @@ int main(int argc, char const *argv[]) {
             if (verdaderos_positivos + falsos_positivos != 0) {
                 accuracy[s] = (float)verdaderos_positivos / ((float)verdaderos_positivos + (float)falsos_positivos);
             } else {
-                accuracy[s] = 0;
+                accuracy[s] = -1;
             }
             if (verdaderos_positivos + falsos_positivos != 0) {
                 recall[s] = (float)verdaderos_positivos / ((float)verdaderos_positivos + (float)falsos_negativos);
             } else {
-                recall[s] = 0;
+                recall[s] = -1;
             }
             if (accuracy[s] + recall[s] != 0) {
                 f1[s] = 2 * accuracy[s] * recall[s] / (accuracy[s] + recall[s]);
             } else {
-                f1[s] = 0;
+                f1[s] = -1;
             }
 
             // Guardar
