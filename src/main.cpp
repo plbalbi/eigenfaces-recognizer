@@ -160,12 +160,12 @@ int main(int argc, char const *argv[]) {
             }
         }
 
-        vector<float> accuracy(sujetos.size());
-        string accuracy_path = "./metricas/";
-        accuracy_path += method_name;
-        accuracy_path += "_accuracy.out";
-        ofstream accuracy_file;
-        accuracy_file.open(accuracy_path);
+        vector<float> precision(sujetos.size());
+        string precision_path = "./metricas/";
+        precision_path += method_name;
+        precision_path += "_precision.out";
+        ofstream precision_file;
+        precision_file.open(precision_path);
 
         vector<float> recall(sujetos.size());
         string recall_path = "./metricas/";
@@ -195,27 +195,27 @@ int main(int argc, char const *argv[]) {
 
             // Metriques
             if (verdaderos_positivos + falsos_positivos != 0) {
-                accuracy[s] = (float)verdaderos_positivos / ((float)verdaderos_positivos + (float)falsos_positivos);
+                precision[s] = (float)verdaderos_positivos / ((float)verdaderos_positivos + (float)falsos_positivos);
             } else {
-                accuracy[s] = -1;
+                precision[s] = -1;
             }
             if (verdaderos_positivos + falsos_positivos != 0) {
                 recall[s] = (float)verdaderos_positivos / ((float)verdaderos_positivos + (float)falsos_negativos);
             } else {
                 recall[s] = -1;
             }
-            if (accuracy[s] + recall[s] != 0) {
-                f1[s] = 2 * accuracy[s] * recall[s] / (accuracy[s] + recall[s]);
+            if (precision[s] + recall[s] != 0 && precision[s] != -1 && recall[s] != -1) {
+                f1[s] = 2 * precision[s] * recall[s] / (precision[s] + recall[s]);
             } else {
                 f1[s] = -1;
             }
 
             // Guardar
-            accuracy_file << s+1 << " " << accuracy[s] << "\n";
+            precision_file << s+1 << " " << precision[s] << "\n";
             recall_file << s+1 << " " << recall[s] << "\n";
             f1_file << s+1 << " " << f1[s] << "\n";
         }
-        accuracy_file.close();
+        precision_file.close();
         recall_file.close();
         f1_file.close();
 
