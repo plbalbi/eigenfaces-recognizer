@@ -32,6 +32,12 @@ images_true.append('../data/caraOno/caras/3.pgm')
 images_true.append('../data/caraOno/caras/4.pgm')
 images_true.append('../data/caraOno/caras/5.pgm')
 images_true.append('../data/caraOno/caras/6.pgm')
+images_true.append('../data/caraOno/caras/7.pgm')
+images_true.append('../data/caraOno/caras/8.pgm')
+images_true.append('../data/caraOno/caras/9.pgm')
+images_true.append('../data/caraOno/caras/10.pgm')
+images_true.append('../data/caraOno/caras/11.pgm')
+images_true.append('../data/caraOno/caras/12.pgm')
 
 resultados_true = []
 resultados_false = []
