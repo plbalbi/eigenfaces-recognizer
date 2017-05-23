@@ -204,7 +204,7 @@ int main(int argc, char const *argv[]) {
             } else {
                 recall[s] = -1;
             }
-            if (accuracy[s] + recall[s] != 0) {
+            if (accuracy[s] + recall[s] != 0 && accuracy[s] != -1 && recall[s] != -1) {
                 f1[s] = 2 * accuracy[s] * recall[s] / (accuracy[s] + recall[s]);
             } else {
                 f1[s] = -1;
