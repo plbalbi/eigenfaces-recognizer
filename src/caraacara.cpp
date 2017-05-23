@@ -193,6 +193,100 @@ void transfCaracteristica_v2(MatrixXd& X, unsigned int k, unsigned int its, Matr
 // -------------- separador de bajo presupuesto --------------
 // Es Cara o No?
 
+bool esCara_v1(const MatrixXd& X, unsigned int its, unsigned int img_alto, unsigned int img_ancho, const char* img_path, RowVectorXd const &media){
+
+    VectorXd v = X.row(0);
+    vector<double> coors = componentes_menos_principales(X, its,v);
+
+    /* Ahora que tengo la distribución de la coordenada de la última componente
+    en las imágenes de entrenamiento, la supongo normal y me dijo si la coordenada
+    de la imagen que me dieron está a +- alpha*sigma de la media.
+    */
+
+    double mean = 0;
+    for (size_t i = 0; i < coors.size(); i++) mean+=coors[i];
+    mean /= (double)coors.size();
+
+    double sigma = 0;
+    for (size_t i = 0; i < coors.size(); i++) sigma+=(coors[i]-mean)*(coors[i]-mean);
+    sigma /= (double)coors.size();
+    sigma = sqrt(sigma);
+
+    double min_lim = mean - 1.3*sigma;
+    double max_lim = mean + 1.3*sigma;
+
+    RowVectorXd imgt;
+    VectorXd img_espacio;
+    get_image(img_path, img_ancho, img_alto, imgt, img_path);
+    imgt -= media;
+    img_espacio = imgt.transpose();
+    double coor = v.transpose()*img_espacio;
+
+    return min_lim < coor && max_lim > coor;
+
+    /*
+    std::cout << "media: "<< mean << '\n';
+    std::cout << "sigma: "<< sigma << '\n';
+    std::cout << "muestra: "<< coor << '\n';
+    std::cout << "Límites: "<< min_lim << "  a  "<<max_lim << '\n';
+    */
+}
+
+
+vector<double> componentes_menos_principales(const MatrixXd& X, unsigned int its, VectorXd &v){
+
+
+    /*
+
+    Esta función devuelve la coordenada de la última componente principal
+    de cada imagen de entrenamiento.
+
+    NOTA IMPORTANTE
+    El método de la potencia inversa no es practicable acá.
+    La inversa de X*Xt que me tira Eigen está lejos de ser la inversa (no dan
+    ni ahí la identidad multiplicadas). Se me ocurren dos explicaciones:
+        * XXt resulta no ser inversible: parece poco probable, pero es posible.
+         Significaría algo como que las imágenes de entrenamiento son ld.
+        * Como las filas son muy parecidas, el número de condición de XXt no es
+        bueno y el cálculo de la inversa da cualquier cosa. Me suena raro también,
+        pero yo que se...
+
+    UPDATE: creo que, evidentemente, XXt no es inversible; ya sea matemáticamente
+    (lo cual me resulta poco probable) o para la computadora por error numérico.
+    */
+
+    v.resize(X.rows());
+
+    // Calculo X*Xt = M_x moño
+    MatrixXd Xt = X.transpose();
+    MatrixXd Mm_x = X*Xt;;
+    Mm_x /= (double)(X.rows()-1);
+
+    // Busco el autovalor de menor magnitud distinto a cero y su autovector asociado
+    vector<double> autovalores;
+    vector<VectorXd> autovectores;
+    VectorXd x = Mm_x.col(0); // un vector cualquiera
+    for (size_t i = 0; i < X.rows(); i++) {
+        double lambda = metodoPotencia(Mm_x,x,its);
+        autovalores.push_back(lambda);
+        autovectores.push_back(x);
+        deflacionar(Mm_x,x,lambda);
+    }
+    assert(X.rows() > 0);
+    int indice = 0;
+    while (autovalores[indice+1] > exp(-8)) {
+        indice++;
+    }
+    v = Xt*autovectores[indice];
+
+    // Calculo la coordenad de cada imagen de entrenamiento
+    VectorXd coors_e = v.transpose()*Xt;
+    vector<double> coors(coors_e.data(), coors_e.data() + coors_e.rows() * coors_e.cols());
+
+    return coors;
+}
+
+
 double train_recognizer(const MatrixXd& V, const std::vector< std::vector<VectorXd>  > &clase_de_sujetos){
     std::vector<double> measuring (clase_de_sujetos.size()*clase_de_sujetos[0].size(), 0);
     MatrixXd V_t = V.transpose();
@@ -225,21 +319,4 @@ bool recognize(const MatrixXd &V, const double& umbral, VectorXd& target){
     VectorXd diff =target - proyection;
     m = diff.norm();
     return m <= umbral;
-}
-
-void componente_menos_principal(MatrixXd& X, unsigned int its){
-
-    // Calculo X*Xt = M_x moño
-    MatrixXd Xt = X.transpose();
-    MatrixXd Mm_x = X*Xt;;
-    Mm_x /= (double)(X.rows()-1);
-
-    // Busco el autovector con autovalor de menor magnitud distinto de cero
-    Mm_x = Mm_x.inverse();
-    vector<double> autovalores;
-    for (size_t i = 0; i < X.rows(); i++) {
-        VectorXd v = Mm_x.col(0); // un vector cualquiera
-        double lambda = metodoPotencia(Mm_x,v,its);
-        deflacionar(Mm_x,v,lambda);
-    }
 }
