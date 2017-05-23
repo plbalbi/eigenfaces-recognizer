@@ -239,7 +239,21 @@ int main(int argc, char const *argv[]) {
         Este flag indica que se intente adivinar si la imagen
         pasada como parámetro es una cara o no.
         */
+        ofstream caraOno;
+        caraOno.open("caraOno.dat");
 
+        bool res = esCara_v1(X, iterations, img_alto, img_ancho, flags.caraOno, media);
+        if (res) {
+            std::cout << "ES CARA!" << '\n';
+            caraOno << res;
+        }else{
+            std::cout << "NO ES CARA!" << '\n';
+            caraOno << res;
+        }
+
+
+        caraOno.close();
+        /*
         // Me guardo las caras centradas
         std::vector< std::vector<VectorXd> > imgs_por_sujeto(sujetos.size());
         for (size_t i = 0; i < sujetos.size(); i++){
@@ -262,6 +276,7 @@ int main(int argc, char const *argv[]) {
             std::cout << termcolor::red << "Esto NO es una CARA... :>(!" << termcolor::reset << std::endl;
 
         }
+        */
     }
 
 

@@ -37,7 +37,8 @@ int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, cons
 double train_recognizer(const MatrixXd& V, const std::vector< std::vector<VectorXd>  > &clase_de_sujetos);
 bool recognize(const MatrixXd &V, const double& umbral, VectorXd& target);
 
-void componente_menos_principal(MatrixXd& X, unsigned int its);
+vector<double> componentes_menos_principales(const MatrixXd& X, unsigned int its, VectorXd &v);
 
+bool esCara_v1(const MatrixXd& X, unsigned int its, unsigned int img_alto, unsigned int img_ancho, const char* img_path, RowVectorXd const &media);
 
 #endif
