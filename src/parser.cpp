@@ -29,6 +29,8 @@ flags_t get_flags(int argc, char const *argv[]){
             res.tiempo = "tiempo.dat";
         }else if (strcmp(param, "-s") == 0){
             res.silent = true;
+        }else if (strcmp(param, "-k") == 0) {
+            res.vecinos = stoi(argv[i+1]);
         }
     }
 

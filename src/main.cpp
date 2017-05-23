@@ -126,7 +126,9 @@ int main(int argc, char const *argv[]) {
         } else if (c == 2) {
             method_name = "WEIGHTED";
         }
-        std::cout << method_name << " ####\n";
+        std::cout << method_name;
+        if (c != 1) std::cout << " (" << flags.vecinos << ")";
+        std::cout << " ####\n";
 
         vector<int> res(tests.size());
         vector< vector<int> > confusion(sujetos.size(), vector<int>(sujetos.size()));
@@ -143,11 +145,11 @@ int main(int argc, char const *argv[]) {
             v = Vt*v;
 
             if (c == 0) {
-                res[i] = fast_knn(clase_de_sujetos,v,5);
+                res[i] = fast_knn(clase_de_sujetos,v,flags.vecinos);
             } else if (c == 1) {
                 res[i] = fast_knn(clase_de_sujetos,v,1);
             } else if (c == 2) {
-                res[i] = weighted_knn(clase_de_sujetos,v,5);
+                res[i] = weighted_knn(clase_de_sujetos,v,flags.vecinos);
             }
 
             // Resultados
