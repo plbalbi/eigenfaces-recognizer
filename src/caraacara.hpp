@@ -37,5 +37,7 @@ int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, cons
 double train_recognizer(const MatrixXd& V, const std::vector< std::vector<VectorXd>  > &clase_de_sujetos);
 bool recognize(const MatrixXd &V, const double& umbral, VectorXd& target);
 
+void componente_menos_principal(MatrixXd& X, unsigned int its);
+
 
 #endif

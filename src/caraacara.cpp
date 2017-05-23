@@ -2,6 +2,8 @@
 #include "tests/unitTesting.hpp"
 #include <vector>
 #include <cfloat>
+#include "include/Eigen/Core"
+#include "include/Eigen/LU"
 
 // -------------- separador de bajo presupuesto --------------
 // Clasificacion
@@ -223,4 +225,21 @@ bool recognize(const MatrixXd &V, const double& umbral, VectorXd& target){
     VectorXd diff =target - proyection;
     m = diff.norm();
     return m <= umbral;
+}
+
+void componente_menos_principal(MatrixXd& X, unsigned int its){
+
+    // Calculo X*Xt = M_x moño
+    MatrixXd Xt = X.transpose();
+    MatrixXd Mm_x = X*Xt;;
+    Mm_x /= (double)(X.rows()-1);
+
+    // Busco el autovector con autovalor de menor magnitud distinto de cero
+    Mm_x = Mm_x.inverse();
+    vector<double> autovalores;
+    for (size_t i = 0; i < X.rows(); i++) {
+        VectorXd v = Mm_x.col(0); // un vector cualquiera
+        double lambda = metodoPotencia(Mm_x,v,its);
+        deflacionar(Mm_x,v,lambda);
+    }
 }
