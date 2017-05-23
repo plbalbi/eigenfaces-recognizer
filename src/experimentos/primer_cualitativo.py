@@ -21,7 +21,7 @@ varianza_f1_global = 0.
 
 
 # DATA ######
-for i in [1, 2, 3, 4, 5]:
+for i in range(1, nro_folds+1):
     test_cols = str([2*i-1, 2*i])
 
     # Sys Calls

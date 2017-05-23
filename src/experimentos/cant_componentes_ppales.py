@@ -1,5 +1,3 @@
-#TODO: Hacer que el eje x sea de enteros, y setear el rango del eje y en [0..1]
-
 import subprocess # call
 import pandas as pd # read_table
 import matplotlib.pyplot as plt # bar, show
@@ -7,7 +5,7 @@ import numpy as np # array
 import os # devnull
 import sys
 
-k_max = 2
+k_max = 15
 nro_folds = 5
 
 precisions = [0] * k_max
@@ -37,9 +35,9 @@ for k in range(1, k_max+1):
             , stdout=open(os.devnull, 'wb'))
 
         # Reading Output
-        prec_table = pd.read_table('metricas/KNN_precision.out', delim_whitespace=True, \
+        prec_table = pd.read_table('metricas/WEIGHTED_precision.out', delim_whitespace=True, \
           names =['class','precision'])
-        rec_table = pd.read_table('metricas/KNN_recall.out', delim_whitespace=True, \
+        rec_table = pd.read_table('metricas/WEIGHTED_recall.out', delim_whitespace=True, \
           names =['class','recall'])
 
         # Global Values
@@ -60,9 +58,13 @@ for k in range(1, k_max+1):
     print("  Recall - Media: {:.2%}".format(media_recall_global))
     print("")
 
-plt.plot(range(1,k_max+1), precisions)
-plt.plot(range(1,k_max+1), recalls)
+plt.plot(range(1,k_max+1), precisions, label='Precision')
+plt.plot(range(1,k_max+1), recalls, label='Recall')
 plt.xlabel('Cantidad de Componentes Principales')
 plt.ylabel('Medición')
-plt.legend(['Precision', 'Recall'], loc=4)
-plt.show()
+plt.legend(loc=4)
+plt.xticks([e  for e in np.arange(k_max+1)  if e % 2 == 0])
+plt.grid(axis='y', color='#cccccc', linestyle='dashed')
+plt.xlim(0, k_max+1)
+plt.ylim(0, 1.05)
+plt.show()  
