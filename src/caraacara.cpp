@@ -289,6 +289,37 @@ vector<double> componentes_menos_principales(const MatrixXd& X, unsigned int its
 }
 
 
+
+bool esCara_v2(const MatrixXd &V_normalized,const MatrixXd &Xt, unsigned int img_alto, unsigned int img_ancho, const char* img_path, RowVectorXd const &media, const vector<sujeto> &sujetos){
+
+    unsigned int img_por_sujeto = sujetos[0].size();
+
+    std::vector< std::vector<VectorXd> > imgs_por_sujeto(sujetos.size());
+    for (size_t i = 0; i < sujetos.size(); i++){
+        imgs_por_sujeto[i] = std::vector<VectorXd>(img_por_sujeto);
+        for (size_t j = 0; j < img_por_sujeto; j++){
+            imgs_por_sujeto[i][j] = Xt.col(i*img_por_sujeto+j);
+        }
+    }
+
+    double max_norm = train_recognizer(V_normalized, imgs_por_sujeto);
+
+    RowVectorXd target;
+    get_image(img_path, img_ancho, img_alto, target, img_path);
+    target = target - media;
+    VectorXd target_t_centered = target.transpose();
+
+    MatrixXd V_t = V_normalized.transpose();
+    double m = 0;
+    VectorXd coordinates = V_t*target_t_centered;
+    VectorXd proyection = V_normalized*coordinates;
+    VectorXd diff =target_t_centered - proyection;
+    m = diff.norm();
+
+    return (m <= max_norm*0.65);
+
+}
+
 double train_recognizer(const MatrixXd& V, const std::vector< std::vector<VectorXd>  > &clase_de_sujetos){
     std::vector<double> measuring (clase_de_sujetos.size()*clase_de_sujetos[0].size(), 0);
     MatrixXd V_t = V.transpose();
@@ -311,14 +342,4 @@ double train_recognizer(const MatrixXd& V, const std::vector< std::vector<Vector
         }
     }
     return max;
-}
-
-bool recognize(const MatrixXd &V, const double& umbral, VectorXd& target){
-    MatrixXd V_t = V.transpose();
-    double m = 0;
-    VectorXd coordinates = V_t*target;
-    VectorXd proyection = V*coordinates;
-    VectorXd diff =target - proyection;
-    m = diff.norm();
-    return m <= umbral;
 }
