@@ -43,31 +43,39 @@ resultados_true = []
 resultados_false = []
 
 # Probando con no-caras
+print '# Probando con no-caras'
 for img in images_false:
-    print 'Probando con ', img,
+    print '\t', img,
     # Generating tp Input
     subprocess.call(['python', './tools/make_input.py' \
     , '../data/ImagenesCaras/', str(k), '-s', '30'])
     # Executing
-    subprocess.call(['./tp','data.in','data.out','-c', img], \
+    subprocess.call(['./tp','data.in','data.out','-c','2', img], \
     stdout=FNULL)
     # Reading res
     medicion = open('caraOno.dat', 'r')
     res = medicion.readline()
     resultados_false.append(res)
-    print '\t', res
+    if int(res):
+    	print '\t', 'Cara'
+    else:
+    	print '\t','No-cara'
 
 # Probando con caras
+print '# Probando con nocaras'
 for img in images_true:
-    print 'Probando con ', img,
+    print '\t', img,
     # Generating tp Input
     subprocess.call(['python', './tools/make_input.py' \
     , '../data/ImagenesCaras/', str(k), '-s', '30'])
     # Executing
-    subprocess.call(['./tp','data.in','data.out','-c', img], \
+    subprocess.call(['./tp','data.in','data.out','-c','2', img], \
     stdout=FNULL)
     # Reading res
     medicion = open('caraOno.dat', 'r')
     res = medicion.readline()
     resultados_true.append(res)
-    print '\t', res
+    if int(res):
+    	print '\t', 'Cara'
+    else:
+    	print '\t','No-cara'
