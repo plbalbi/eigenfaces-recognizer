@@ -103,7 +103,7 @@ int weighted_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, 
     for (int i = 0; i < k; i++) {
         counts[distances[i].first] += (max_k - distances[i].second);
     }
-    int max_clase;
+    int max_clase = 1;
     double max_qty = 0;
     for (size_t i = 0; i < counts.size(); i++) {
         if (counts[i] > max_qty) {
