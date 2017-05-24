@@ -62,7 +62,7 @@ for img in images_false:
     	print '\t','No-cara'
 
 # Probando con caras
-print '# Probando con nocaras'
+print '# Probando con caras'
 for img in images_true:
     print '\t', img,
     # Generating tp Input
