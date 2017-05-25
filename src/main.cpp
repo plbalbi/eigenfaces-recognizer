@@ -78,6 +78,17 @@ int main(int argc, char const *argv[]) {
     }
     std::cout << "Armando TL al espacio copado...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
+    if (flags.justTrain) {
+        clock_t end_clock = clock();
+        double segundos = (double)(end_clock - start_clock)/CLOCKS_PER_SEC;
+        ofstream tiempo;
+        tiempo.open("tiempo.dat", std::ifstream::out);
+        tiempo << std::setprecision(10);
+        tiempo << segundos;
+        tiempo.close();
+        return 0;
+    }
+
     // -------------- separador de bajo presupuesto --------------
 
     std::cout << "Guardando autovalores...\r" << std::flush;

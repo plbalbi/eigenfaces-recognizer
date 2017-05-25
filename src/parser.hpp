@@ -19,6 +19,7 @@ struct flags_t{
     const char * matriz; // -m
     const char * tiempo; // -t
     bool silent = false; // -s
+    bool justTrain = false;
 };
 
 // Tipos
