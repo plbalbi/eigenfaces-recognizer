@@ -5,6 +5,16 @@
 #include <cfloat>
 #include <ctime>
 
+#define PROFILING_TIME(I) if (flags.profile) {\
+        profiling_end_clock = clock();\
+        segundos = (double)(profiling_end_clock - profiling_start_clock)/CLOCKS_PER_SEC;\
+        profiling[I] = segundos;\
+        profiling_start_clock = clock();\
+    }
+#define PROFILING_RESET if (flags.profile) {\
+        profiling_start_clock = clock();\
+    }
+
 
 int main(int argc, char const *argv[]) {
 
@@ -46,8 +56,17 @@ int main(int argc, char const *argv[]) {
     in_path = argv[1];
     out_path = argv[2];
 
+    // Esto me hubierda gustado declararlo en un if
+    // Pero se me queja el compilador que no encuentra la declaracion
+    // dont know, no time, yafu
+    double profiling[4];
+    double segundos;
+    clock_t profiling_end_clock, profiling_start_clock;
+
     std::cout << "Leyendo parámetros de entrada...\r" << std::flush;
+    PROFILING_RESET
     read_input(in_path, img_ancho, img_alto, k, sujetos, tests);
+    PROFILING_TIME(0)
     if (sujetos.size()>0) img_por_sujeto = sujetos[0].size();
     std::cout << "Leyendo parámetros de entrada...\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
@@ -56,6 +75,7 @@ int main(int argc, char const *argv[]) {
     // -------------- separador de bajo presupuesto --------------
 
     std::cout << "Armando TL al espacio copado...\r" << std::flush;
+    PROFILING_RESET
     MatrixXd X;
     RowVectorXd media;
     cargar_datos(img_alto, img_ancho, sujetos, X, media);
@@ -64,7 +84,7 @@ int main(int argc, char const *argv[]) {
     std::vector<double> autovalores;
     if (flags.matriz != NULL) {
         //calcula los autovectores con la matriz Xt*X
-        transfCaracteristica_v1(X, k, 500, V, autovalores);
+        transfCaracteristica_v1(X, k, iterations, V, autovalores);
     }else{
         //calcula los autovectores con la matriz X*Xt
         transfCaracteristica_v2(X, k, iterations, V, autovalores);
@@ -76,6 +96,7 @@ int main(int argc, char const *argv[]) {
         V_normalized.col(i) = V_normalized.col(i) /  V_normalized.col(i).norm();
         //V_normalized.col(i) = V_normalized.col(i).array().abs()*(255/V_normalized.col(i).maxCoeff());
     }
+    PROFILING_TIME(1)
     std::cout << "Armando TL al espacio copado...\t\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
     if (flags.justTrain) {
@@ -104,6 +125,7 @@ int main(int argc, char const *argv[]) {
     // -------------- separador de bajo presupuesto --------------
 
     std::cout << "Pasando imágenes a nuevo espacio...\r" << std::flush;
+    PROFILING_RESET
     MatrixXd Xt = X.transpose();
 
     // Vector que contiene cada cara de cada sujetos en un vector, ya convertida al nuevo espacio
@@ -118,6 +140,7 @@ int main(int argc, char const *argv[]) {
             clase_de_sujetos[i][j] = PXt.col(i*img_por_sujeto+j);
         }
     }
+    PROFILING_TIME(2)
     std::cout << "Pasando imágenes a nuevo espacio...\t" << termcolor::green << "OK" << termcolor::reset << std::endl;
 
     // -------------- separador de bajo presupuesto --------------
@@ -138,6 +161,7 @@ int main(int argc, char const *argv[]) {
             method_name = "WEIGHTED";
         }
         std::cout << method_name << " ####\n";
+        PROFILING_RESET
 
         vector<int> res(tests.size());
         vector< vector<int> > confusion(sujetos.size(), vector<int>(sujetos.size()));
@@ -169,6 +193,16 @@ int main(int argc, char const *argv[]) {
             }else{
                 std::cout << termcolor::red << tests[i].respuesta << " parece ser " << res[i] << termcolor::reset << '\n';
             }
+        }
+        PROFILING_TIME(3)
+        if (flags.profile) {
+            std::ofstream profile_out("PROFILE.dat");
+            profile_out << std::setprecision(6); // 9 dígitos
+            for (int i = 0; i < 4; i++) {
+                profile_out << i+1 << "   "  << profiling[i] << "\n";
+            }
+            profile_out.close();
+            return 0;
         }
 
         vector<float> precision(sujetos.size());
@@ -235,7 +269,7 @@ int main(int argc, char const *argv[]) {
 
 
     clock_t end_clock = clock();
-    double segundos = (double)(end_clock - start_clock)/CLOCKS_PER_SEC;
+    segundos = (double)(end_clock - start_clock)/CLOCKS_PER_SEC;
     std::cout << "\n Tiempo de ejecución: ~ "<< segundos << " seg" << '\n';
 
 
