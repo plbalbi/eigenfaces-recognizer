@@ -11,8 +11,6 @@ print("DISLAIMER: Ejecutame desde la carpeta experimentos por favor... gracias!"
 # Experiment values
 warm_up = 25# Para que el proce ya tenga todo lo necesario en cache WARM UP
 trimming = 30 # Para quedarse con la media de todas la medidas obtenidas
-# warm_up = 5
-# trimming = 1 
 times = [0,0,0,0]
 # sys call 
 input_maker = ['python', './tools/make_input.py' \
@@ -65,5 +63,50 @@ plt.pie(sizes, explode=explode, autopct='%1.1f%%',
 plt.legend(labels, loc="best")
 plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
-plt.savefig('plots/time_profiling.pdf',format='pdf')
-plt.show()
+plt.savefig('plots/time_profiling_v2.pdf',format='pdf')
+plt.clf()
+
+
+times = [0,0,0,0]
+trimming = 3 
+tp = ['./tp', 'data.in', 'data.out' \
+    ,'-p','-m']
+
+# PWD es ahora src/
+# para que guarde el data.in ahi, y poder llamar a ./tp mas facil
+
+print "Calenteando..."
+print "A re que ya calente!"
+
+print("Empezando experimento...")
+for k in range(0, trimming):
+    print k, " ..."
+    subprocess.call(tp ,stdout=open(os.devnull, 'wb'))
+    temp = np.loadtxt("PROFILE.dat")
+    for i in range(0,4):
+        times[i] = times[i] + temp[i][1]
+
+# Cleaning
+subprocess.call(["rm", "PROFILE.dat"])
+
+for i in range(0,4):
+    times[i] = times[i]/trimming
+print times
+
+
+sizes = [x/max(times)*100 for x in times]
+
+# Pie chart, where the slices will be ordered and plotted counter-clockwise:
+labels = []
+for i in range(0,4):
+    labels.append("Etapa " + str(i+1)+": "+ "{:.6f}".format(times[i]) + " seg.")
+
+explode = (0.6, 0, 0.2, 0.4)  # only "explode" the 2nd slice (i.e. 'Hogs')
+
+plt.pie(sizes, explode=explode, autopct='%1.1f%%',
+         startangle=180, pctdistance=1.15)
+plt.legend(labels, loc="best")
+plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+plt.savefig('plots/time_profiling_v1.pdf',format='pdf')
+plt.clf()

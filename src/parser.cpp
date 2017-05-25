@@ -33,6 +33,9 @@ flags_t get_flags(int argc, char const *argv[]){
         }else if (strcmp(param, "-jt") == 0 ||
                   strcmp(param, "--justTrain") == 0){
             res.justTrain = true;
+        }else if (strcmp(param, "-p") == 0 ||
+                  strcmp(param, "--profile") == 0){
+            res.profile = true;
         }
 
     }
