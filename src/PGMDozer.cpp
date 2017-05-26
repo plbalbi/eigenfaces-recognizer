@@ -40,7 +40,8 @@ void get_image(const char* image_route, unsigned int ancho, unsigned int alto, R
     source >> std::ws; // salto espacios
     while (source.peek()=='#') getline(source, comment); // si hay commentarios
     getline(source, maxvalue); // maxValue
-    while (source.peek()=='#') getline(source, comment); // si hay commentarios
+    // Linea de M$&%"&DA, NOS HIZO LEERNO MEDIA REPO
+    //while (source.peek()=='#') getline(source, comment); // si hay commentarios
 
     /* DEBUG
     bytes = bytes - source.tellg() ;
