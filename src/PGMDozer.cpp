@@ -96,7 +96,7 @@ void show_help(){
     message += "./tp <ruta-parámetros> <ruta-salida> <flags>\n";
     message += "\n";
     message += "El campo <flags> puede ser alguno/s de los siguientes: \n";
-    message += "\t -c <ruta-imagen> (determinar si la imagen de la ruta es o no una cara) \n";
+    message += "\t -c i <ruta-imagen> (determinar si la imagen de la ruta es o no una cara usando el método 'i') \n";
     message += "\t -v <ruta-salida> (guardar vectores de entrenamiento reducidos con PCA) \n";
     message += "\t -a  (guardar en 'sujetos/' las autocaras en .pgm) \n";
     message += "\t -i o --its  (determinar la cantidad de iteraciones que hace método potencia) \n";

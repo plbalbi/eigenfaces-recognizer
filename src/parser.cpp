@@ -16,7 +16,8 @@ flags_t get_flags(int argc, char const *argv[]){
         const char* param = argv[i];
 
         if (strcmp(param, "-c") == 0) {
-            res.caraOno = argv[i+1];
+            res.caraOno_metodo = stoi(argv[i+1]);
+            res.caraOno = argv[i+2];
         }else if(strcmp(param, "-v") == 0){
             res.vecReducidos = argv[i+1];
         }else if(strcmp(param, "-a") == 0){

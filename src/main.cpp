@@ -240,46 +240,30 @@ int main(int argc, char const *argv[]) {
         "-c"
         Este flag indica que se intente adivinar si la imagen
         pasada como parámetro es una cara o no.
-        */
-        ofstream caraOno;
-        caraOno.open("caraOno.dat");
 
-        bool res = esCara_v1(X, iterations, img_alto, img_ancho, flags.caraOno, media);
+        El método '1' es el de la componente menos principal.
+        El método '2' es el de la reconstrucción de las imágenes.
+        */
+        bool res;
+
+        if (flags.caraOno_metodo == 1) {
+            res = esCara_v1(X, iterations, img_alto, img_ancho, flags.caraOno, media);
+        }else if(flags.caraOno_metodo ==2){
+            res = esCara_v2(V_normalized, Xt, img_alto, img_ancho, flags.caraOno, media, sujetos);
+        }
         if (res) {
             std::cout << "ES CARA!" << '\n';
-            caraOno << res;
         }else{
             std::cout << "NO ES CARA!" << '\n';
-            caraOno << res;
         }
-
-
+        ofstream caraOno;
+        caraOno.open("caraOno.dat");
+        caraOno << res;
         caraOno.close();
-        /*
-        // Me guardo las caras centradas
-        std::vector< std::vector<VectorXd> > imgs_por_sujeto(sujetos.size());
-        for (size_t i = 0; i < sujetos.size(); i++){
-            imgs_por_sujeto[i] = std::vector<VectorXd>(img_por_sujeto);
-            for (size_t j = 0; j < img_por_sujeto; j++){
-                imgs_por_sujeto[i][j] = Xt.col(i*img_por_sujeto+j);
-            }
-        }
 
-        const char* isImage_route = flags.caraOno;
-        std::cout << isImage_route << std::endl;
-        double max_norm = train_recognizer(V_normalized, imgs_por_sujeto);
-        RowVectorXd target;
-        get_image(flags.caraOno, img_ancho, img_alto, target, flags.caraOno);
-        target = target - media;
-        VectorXd target_t_centered = target.transpose();
-        if (recognize(V_normalized, max_norm*1, target_t_centered)) {
-            std::cout << termcolor::green << "Esto es una CARA!" << termcolor::reset << std::endl;
-        }else{
-            std::cout << termcolor::red << "Esto NO es una CARA... :>(!" << termcolor::reset << std::endl;
 
-        }
-        */
     }
+
 
 
     if (flags.vecReducidos != NULL) {

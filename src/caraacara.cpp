@@ -198,9 +198,20 @@ bool esCara_v1(const MatrixXd& X, unsigned int its, unsigned int img_alto, unsig
     VectorXd v = X.row(0);
     vector<double> coors = componentes_menos_principales(X, its,v);
 
+    // Las siguientes líneas guardan la autocara
+    /*
+    RowVectorXd sujeto_en_espacio = v.transpose();
+    RowVectorXd unos(img_alto*img_ancho);
+    unos.setOnes();
+    unos *= sujeto_en_espacio.minCoeff();
+    sujeto_en_espacio -= unos;
+    sujeto_en_espacio *= 255.0/(sujeto_en_espacio.maxCoeff());
+    save_image("componente_menos_principal.pgm", img_ancho, img_alto, sujeto_en_espacio);
+    */
+
     /* Ahora que tengo la distribución de la coordenada de la última componente
-    en las imágenes de entrenamiento, la supongo normal y me dijo si la coordenada
-    de la imagen que me dieron está a +- alpha*sigma de la media.
+    en las imágenes de entrenamiento, la supongo normal y me fijo si la coordenada
+    de la imagen que me dieron está a +- 2*sigma de la media.
     */
 
     double mean = 0;
@@ -212,8 +223,8 @@ bool esCara_v1(const MatrixXd& X, unsigned int its, unsigned int img_alto, unsig
     sigma /= (double)coors.size();
     sigma = sqrt(sigma);
 
-    double min_lim = mean - 1.3*sigma;
-    double max_lim = mean + 1.3*sigma;
+    double min_lim = mean - 2*sigma;
+    double max_lim = mean + 2*sigma;
 
     RowVectorXd imgt;
     VectorXd img_espacio;
@@ -222,22 +233,13 @@ bool esCara_v1(const MatrixXd& X, unsigned int its, unsigned int img_alto, unsig
     img_espacio = imgt.transpose();
     double coor = v.transpose()*img_espacio;
 
-    return min_lim < coor && max_lim > coor;
+    return (min_lim < coor) && (max_lim > coor);
 
-    /*
-    std::cout << "media: "<< mean << '\n';
-    std::cout << "sigma: "<< sigma << '\n';
-    std::cout << "muestra: "<< coor << '\n';
-    std::cout << "Límites: "<< min_lim << "  a  "<<max_lim << '\n';
-    */
 }
 
 
 vector<double> componentes_menos_principales(const MatrixXd& X, unsigned int its, VectorXd &v){
-
-
     /*
-
     Esta función devuelve la coordenada de la última componente principal
     de cada imagen de entrenamiento.
 
@@ -257,7 +259,7 @@ vector<double> componentes_menos_principales(const MatrixXd& X, unsigned int its
 
     v.resize(X.rows());
 
-    // Calculo X*Xt = M_x moño
+    // Calculo X*Xt = M_x moño = Mm_x
     MatrixXd Xt = X.transpose();
     MatrixXd Mm_x = X*Xt;;
     Mm_x /= (double)(X.rows()-1);
@@ -266,7 +268,7 @@ vector<double> componentes_menos_principales(const MatrixXd& X, unsigned int its
     vector<double> autovalores;
     vector<VectorXd> autovectores;
     VectorXd x = Mm_x.col(0); // un vector cualquiera
-    for (size_t i = 0; i < X.rows(); i++) {
+    for (int i = 0; i < X.rows(); i++) {
         double lambda = metodoPotencia(Mm_x,x,its);
         autovalores.push_back(lambda);
         autovectores.push_back(x);
@@ -277,15 +279,46 @@ vector<double> componentes_menos_principales(const MatrixXd& X, unsigned int its
     while (autovalores[indice+1] > exp(-8)) {
         indice++;
     }
-    v = Xt*autovectores[indice];
+    v = Xt*autovectores[indice]; // Para convertir autovector de Mm_x a uno de M_x
 
-    // Calculo la coordenad de cada imagen de entrenamiento
+    // Calculo la coordenada de cada imagen de entrenamiento
     VectorXd coors_e = v.transpose()*Xt;
     vector<double> coors(coors_e.data(), coors_e.data() + coors_e.rows() * coors_e.cols());
 
     return coors;
 }
 
+
+
+bool esCara_v2(const MatrixXd &V_normalized,const MatrixXd &Xt, unsigned int img_alto, unsigned int img_ancho, const char* img_path, RowVectorXd const &media, const vector<sujeto> &sujetos){
+
+    unsigned int img_por_sujeto = sujetos[0].size();
+
+    std::vector< std::vector<VectorXd> > imgs_por_sujeto(sujetos.size());
+    for (size_t i = 0; i < sujetos.size(); i++){
+        imgs_por_sujeto[i] = std::vector<VectorXd>(img_por_sujeto);
+        for (size_t j = 0; j < img_por_sujeto; j++){
+            imgs_por_sujeto[i][j] = Xt.col(i*img_por_sujeto+j);
+        }
+    }
+
+    double max_norm = train_recognizer(V_normalized, imgs_por_sujeto);
+
+    RowVectorXd target;
+    get_image(img_path, img_ancho, img_alto, target, img_path);
+    target = target - media;
+    VectorXd target_t_centered = target.transpose();
+
+    MatrixXd V_t = V_normalized.transpose();
+    double m = 0;
+    VectorXd coordinates = V_t*target_t_centered;
+    VectorXd proyection = V_normalized*coordinates;
+    VectorXd diff =target_t_centered - proyection;
+    m = diff.norm();
+
+    return (m <= max_norm*0.65);
+
+}
 
 double train_recognizer(const MatrixXd& V, const std::vector< std::vector<VectorXd>  > &clase_de_sujetos){
     std::vector<double> measuring (clase_de_sujetos.size()*clase_de_sujetos[0].size(), 0);
@@ -309,14 +342,4 @@ double train_recognizer(const MatrixXd& V, const std::vector< std::vector<Vector
         }
     }
     return max;
-}
-
-bool recognize(const MatrixXd &V, const double& umbral, VectorXd& target){
-    MatrixXd V_t = V.transpose();
-    double m = 0;
-    VectorXd coordinates = V_t*target;
-    VectorXd proyection = V*coordinates;
-    VectorXd diff =target - proyection;
-    m = diff.norm();
-    return m <= umbral;
 }

@@ -34,11 +34,12 @@ int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, cons
 // -------------- separador de bajo presupuesto --------------
 
 // Es Cara o No?
-double train_recognizer(const MatrixXd& V, const std::vector< std::vector<VectorXd>  > &clase_de_sujetos);
-bool recognize(const MatrixXd &V, const double& umbral, VectorXd& target);
-
-vector<double> componentes_menos_principales(const MatrixXd& X, unsigned int its, VectorXd &v);
 
 bool esCara_v1(const MatrixXd& X, unsigned int its, unsigned int img_alto, unsigned int img_ancho, const char* img_path, RowVectorXd const &media);
+vector<double> componentes_menos_principales(const MatrixXd& X, unsigned int its, VectorXd &v);
+
+
+bool esCara_v2(const MatrixXd &V_normalized,const MatrixXd &Xt, unsigned int img_alto, unsigned int img_ancho, const char* img_path, RowVectorXd const &media, const vector<sujeto> &sujetos);
+double train_recognizer(const MatrixXd& V, const std::vector< std::vector<VectorXd>  > &clase_de_sujetos);
 
 #endif
