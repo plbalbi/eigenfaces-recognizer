@@ -4,27 +4,12 @@
 ################### Grupo: 'El Gato Gauss' ###################
 ##############################################################
 
+# Programa principal
+El programa principal, además de las funciones que pidió la consigna de la cátedra, tiene otras que utilizamos para experimentar. Estas funcionalidades se activan con flags, los cuales se describen en el help del ejecutable (ejecutar 'tp' sin parámetro).
 
-# Experimento
+# Experimentos
 Para correr los experimentos, instalar python 2.7.
 
-Los experimentos se encuentran en la carpeta 'experimentos', y deben ser llamados como desde la carpeta 'src', de la siguiente forma:
+Los experimentos se encuentran en la carpeta 'experimentos', y deben ser llamados como desde la carpeta 'src' o 'src/experimentos', de la siguiente forma:
 
 python experimentos/nombre_experimento.py
-
-
-# Scripts de la cátedra
-Para utilizar los scripts en python, instalar python 2.7. Para ejecutar los scripts, desde una consola ejecutar:
-
-python metnum.py opcion
-
-donde opcion puede ser:
-
-compile: Compila todos los *.cpp que hayan en el directorio.
-link: Genera el ejecutable en base a los *.o generados previamente.
-build: compile + link
-clean: borra los *.o y el ejecutable.
-test: hace el build, busca lo archivos *.in en la carpeta tests/, ejecuta el programa y guarda el
-resultado para cada corrida en el correspondiente .out. Despues, chequea que el resultado sea el "mismo" que el
-.expected, tambien del directorio test. En este caso, la comparacion es por tolerancia coordenada a coordeanda del vector
-solucion.
