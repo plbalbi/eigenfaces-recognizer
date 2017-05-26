@@ -31,7 +31,7 @@ tiempos1 = []
 tiempos2 = []
 
 for size in sizes:
-    print "Creating ", size, " images"
+    print ("Creating ", size, " images")
 
     # Creating images
     base = '../data/ImagenesCaras_' + str(size[0]) + 'x' + str(size[1])
@@ -43,7 +43,7 @@ for size in sizes:
     subprocess.call(['python', './tools/make_input.py' \
     , base+'/', str(k), '-ti', '[2]'])
 
-    print "Running 'Cara A Cara'"
+    print ("Running 'Cara A Cara'")
 
     muestras = []
     for i in range(0,3):
@@ -86,11 +86,11 @@ for size in sizes:
 
 ###### TABLA #######
 
-print '###### TABLE ######'
-print 'Sizes: ', sizes
-print 'Resolutions: ', pixels
-print 'Tiempos X*Xt: ', tiempos1
-print 'Tiempos Xt*X: ', tiempos2
+print ('###### TABLE ######')
+print ('Sizes: ', sizes)
+print ('Resolutions: ', pixels)
+print ('Tiempos X*Xt: ', tiempos1)
+print ('Tiempos Xt*X: ', tiempos2)
 
 
 ####### BARRAS  #########

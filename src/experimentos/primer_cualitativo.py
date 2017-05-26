@@ -67,7 +67,7 @@ for i in range(1, nro_folds+1):
     media_recalls += rec_arr_class
     count_recalls += rec_count_class
 
-# Transform Summations into Means 
+# Transform Summations into Means
 #  If count[i] is 0, el f1 se invalido en todos los folds, con lo cual
 #  media[i] debe ser NaN (algo / np.nan = np.nan)
 count_precisiones = np.array([np.nan if e == 0 else e  for e in count_precisiones])
@@ -84,7 +84,7 @@ varianza_f1_global /= nro_folds
 
 
 # RESULTS ######
-print("\n\nVALORACIÓN (Porcentajes)")
+print("\n\nVALORACIoN (Porcentajes)")
 print("Precision - Media: {:.2%}".format(media_precision_global))
 print("Precision - Varianza: {:.2%}".format(varianza_precision_global))
 print("Recall - Media: {:.2%}".format(media_recall_global))
@@ -98,6 +98,6 @@ ax.yaxis.grid(color='#cccccc', linestyle='dashed')
 plt.bar(prec_table['class']-0.16, media_precisiones, width=0.32, zorder=3)
 plt.bar(prec_table['class']+0.16, media_recalls, width=0.32, zorder=3)
 plt.xlabel('Clases')
-plt.ylabel('Medición')
+plt.ylabel('Medicion')
 plt.legend(['Precision', 'Recall'], loc=4)
 plt.show()

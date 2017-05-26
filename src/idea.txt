@@ -1,2 +1,0 @@
-Portada del TP
-  - Un vector columna de portadas de la revista caras

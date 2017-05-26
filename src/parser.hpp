@@ -20,6 +20,8 @@ struct flags_t{
     const char * tiempo; // -t
     bool silent = false; // -s
     int vecinos = 5; // -k
+    bool justTrain = false;
+    bool profile = false;
 };
 
 // Tipos

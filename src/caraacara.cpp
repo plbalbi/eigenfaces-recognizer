@@ -8,65 +8,6 @@
 // -------------- separador de bajo presupuesto --------------
 // Clasificacion
 
-int kNN(const vector< vector< VectorXd> > &clase_de_sujetos, const VectorXd &v, int k){
-    // X es la matriz cuyas filas son las muestras de entrenamiento
-    // Hay 'cant_sujetos' clases, y para cada una, 'img_por_sujeto' muestras
-    // A los elementos X[s*img_por_sujeto..s*img_por_sujeto+img_por_sujeto)
-    // los vamos a asignar a la clase 'i'. Queremos ver a que clase pertenece v
-
-    int img_por_sujeto = clase_de_sujetos[0].size();
-
-    // Calculo distancias
-    int cant_muestras = clase_de_sujetos.size() * img_por_sujeto;
-    vector<double> distancias(cant_muestras);
-    int indice = 0;
-    for (size_t i = 0; i < clase_de_sujetos.size(); i++) {
-        for (size_t j = 0; j < clase_de_sujetos[i].size(); j++) {
-            VectorXd temp = clase_de_sujetos[i][j] - v;
-            distancias[indice] = temp.norm();
-            indice++;
-        }
-    }
-
-    // Me guardo los índices de los k vecinos más cercanos
-    // TODO si hubiera distancias iguales no se comporta como debería esta parte
-    vector<int> indices(k);
-    vector<double> minimos(k, DBL_MAX);
-    for (int i = 0; i < k; i++) { // k vecinos
-        for (int j = 0; j < cant_muestras; j++) { // busco sobre las muestras
-            if (i == 0 || distancias[j] > minimos[i-1]) { // para buscar el i-esimo mínimo
-                if (minimos[i] > distancias[j]) {
-                    minimos[i] = distancias[j];
-                    indices[i] = j;
-                }
-            }
-        }
-    }
-
-    // Transformo los índices de los vecinos en las clases de los mismos
-    vector<int> clases(k);
-    for (int i = 0; i < k; i++) {
-        clases[i] = indices[i] % img_por_sujeto;
-    }
-
-    // Cuento qué clase tiene más votos
-    int max_count = 0;
-    int max_clase = 0;
-    for (int i = 0; i < k; i++) {
-        int clase = clases[i];
-        int count = 0; // voy a contar cuantos 'clase' hay en 'clases'
-        for (int j = 0; j < k; j++) {
-            if (clase == clases[j]) count++;
-        }
-        if (count > max_count) {
-            max_clase = clase;
-            max_count = count;
-        }
-    }
-
-    return max_clase +1;
-}
-
 int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, const VectorXd &v, int k){
     std::vector< std::pair<int, double> > distances;
     for (size_t s = 0; s < clase_de_sujetos.size(); s++) {
@@ -242,19 +183,6 @@ vector<double> componentes_menos_principales(const MatrixXd& X, unsigned int its
     /*
     Esta función devuelve la coordenada de la última componente principal
     de cada imagen de entrenamiento.
-
-    NOTA IMPORTANTE
-    El método de la potencia inversa no es practicable acá.
-    La inversa de X*Xt que me tira Eigen está lejos de ser la inversa (no dan
-    ni ahí la identidad multiplicadas). Se me ocurren dos explicaciones:
-        * XXt resulta no ser inversible: parece poco probable, pero es posible.
-         Significaría algo como que las imágenes de entrenamiento son ld.
-        * Como las filas son muy parecidas, el número de condición de XXt no es
-        bueno y el cálculo de la inversa da cualquier cosa. Me suena raro también,
-        pero yo que se...
-
-    UPDATE: creo que, evidentemente, XXt no es inversible; ya sea matemáticamente
-    (lo cual me resulta poco probable) o para la computadora por error numérico.
     */
 
     v.resize(X.rows());

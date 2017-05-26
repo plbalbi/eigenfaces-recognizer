@@ -17,6 +17,7 @@ parser.add_argument( "-s", help="cantidad de sujetos a considerar (default = all
 parser.add_argument( "-i", help="cantidad de imágenes por sujeto considerar (default = all)", default=1000000, type=int )
 parser.add_argument( "-ts", help="lista con sujetos para testear (default = none)", default="[]")
 parser.add_argument( "-ti", help="lista con números de imagenes para testear (default = [1])", default="[1]")
+parser.add_argument( "-train", action='store_true', help="Si solo quiero entrenar (Para que no considere ninguna de testeo) (default = False)", default=False)
 args = parser.parse_args()
 
 directory = args.dir
@@ -24,7 +25,10 @@ k = args.k
 lim_sujetos = args.s
 lim_imgs = args.i
 test_rows = ast.literal_eval(args.ts)
-test_cols = ast.literal_eval(args.ti)
+test_cols = []
+if not args.train:
+    test_cols = ast.literal_eval(args.ti)
+    
 
 
 # CONTROL DE LA ENTRADA

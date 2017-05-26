@@ -1,0 +1,15 @@
+##############################################################
+################ MÉTODOS NUMÉRICOS 2017 - 1C #################
+############ Trabajo Práctico No. 2: Cara a Cara #############
+################### Grupo: 'El Gato Gauss' ###################
+##############################################################
+
+# Programa principal
+El programa principal, además de las funciones que pidió la consigna de la cátedra, tiene otras que utilizamos para experimentar. Estas funcionalidades se activan con flags, los cuales se describen en el help del ejecutable (ejecutar 'tp' sin parámetro).
+
+# Experimentos
+Para correr los experimentos, instalar python 2.7.
+
+Los experimentos se encuentran en la carpeta 'experimentos', y deben ser llamados como desde la carpeta 'src' o 'src/experimentos', de la siguiente forma:
+
+python experimentos/nombre_experimento.py

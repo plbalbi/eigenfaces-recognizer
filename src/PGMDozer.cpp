@@ -40,7 +40,8 @@ void get_image(const char* image_route, unsigned int ancho, unsigned int alto, R
     source >> std::ws; // salto espacios
     while (source.peek()=='#') getline(source, comment); // si hay commentarios
     getline(source, maxvalue); // maxValue
-    while (source.peek()=='#') getline(source, comment); // si hay commentarios
+    // Linea de M$&%"&DA, NOS HIZO LEERNO MEDIA REPO
+    //while (source.peek()=='#') getline(source, comment); // si hay commentarios
 
     /* DEBUG
     bytes = bytes - source.tellg() ;
@@ -96,13 +97,14 @@ void show_help(){
     message += "./tp <ruta-parámetros> <ruta-salida> <flags>\n";
     message += "\n";
     message += "El campo <flags> puede ser alguno/s de los siguientes: \n";
-    message += "\t -c i <ruta-imagen> (determinar si la imagen de la ruta es o no una cara usando el método 'i') \n";
+    message += "\t -c i <ruta-imagen> (determinar si la imagen de la ruta es o no una cara usando el método 'i')\n";
     message += "\t -v <ruta-salida> (guardar vectores de entrenamiento reducidos con PCA) \n";
     message += "\t -a  (guardar en 'sujetos/' las autocaras en .pgm) \n";
     message += "\t -i o --its  (determinar la cantidad de iteraciones que hace método potencia) \n";
     message += "\t -m  (calcular autovectores usando la matriz de covarianza) \n";
     message += "\t -t  (guardar en 'tiempo.dat' el tiempo de ejecución en segundos) \n";
     message += "\t -s  (modo silencioso, no se usa salida estándar) \n";
+    message += "\t -jt o --justTrain  (solo entrenar y guardar el tiempo que se tarda en 'tiempo.dat') \n";
     message += "Salu2\n";
     std::cout << termcolor::red << caras_art << termcolor::reset ;
     std::cout << termcolor::bold << termcolor::red << "\t\t\tRECOGNIZER\n\n" << termcolor:: reset << std::endl;
