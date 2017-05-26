@@ -26,10 +26,8 @@ double inline distancia(const VectorXd &a, const VectorXd &b){VectorXd temp = a 
 // -------------- separador de bajo presupuesto --------------
 // Clasificacion
 
-int kNN(const vector< vector< VectorXd> > &clase_de_sujetos, const VectorXd &v, int k);
 int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, const VectorXd &v, int k);
 int weighted_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, const VectorXd &v, int k);
-int fast_knn(const std::vector< std::vector<VectorXd>  > &clase_de_sujetos, const VectorXd &v, int k);
 
 // -------------- separador de bajo presupuesto --------------
 

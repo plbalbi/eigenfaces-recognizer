@@ -56,9 +56,6 @@ int main(int argc, char const *argv[]) {
     in_path = argv[1];
     out_path = argv[2];
 
-    // Esto me hubierda gustado declararlo en un if
-    // Pero se me queja el compilador que no encuentra la declaracion
-    // dont know, no time, yafu
     double profiling[4];
     double segundos;
     clock_t profiling_end_clock, profiling_start_clock;
@@ -307,8 +304,6 @@ int main(int argc, char const *argv[]) {
 
     }
 
-
-
     if (flags.vecReducidos != NULL) {
         /*
         "-v"
@@ -342,7 +337,6 @@ int main(int argc, char const *argv[]) {
         tiempo << segundos;
         tiempo.close();
     }
-
 
     if (flags.autocaras != NULL) {
         /*

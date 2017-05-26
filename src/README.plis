@@ -1,5 +1,12 @@
+##############################################################
+################ MÉTODOS NUMÉRICOS 2017 - 1C #################
+############ Trabajo Práctico No. 2: Cara a Cara #############
+################### Grupo: 'El Gato Gauss' ###################
+##############################################################
+
+
 # Experimento
-Para correr los experimentos, instalar python 2.7 o versiones más recientes.
+Para correr los experimentos, instalar python 2.7.
 
 Los experimentos se encuentran en la carpeta 'experimentos', y deben ser llamados como desde la carpeta 'src', de la siguiente forma:
 
